@@ -4,6 +4,8 @@ const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { isUsernameValid, isPasswordValid } = require('../utils/inputValidation')
+const authVerify = require('../middlewares/authVerify')
 
 //Retrives the secrect key for JWT signature
 const secretKey = process.env.SECRET_KEY;
@@ -12,6 +14,8 @@ const secretKey = process.env.SECRET_KEY;
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
+        if(!isUsernameValid(username)) res.status(400).json({error: 'username is invalid'})
+        if(!isPasswordValid(password)) res.status(400).json({error: 'password is invalid'})
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({ username: username, password: hashedPassword});
         await user.save();
@@ -37,4 +41,5 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/checkToken', authVerify, (req, res, next) => res.status(200).json({ authentication: true }))
 module.exports = router;

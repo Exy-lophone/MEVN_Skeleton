@@ -7,7 +7,7 @@
                     <router-link to="#">Link 1</router-link>
                     <router-link to="#">Link 2</router-link>
                     <router-link to="#">Link 3</router-link>
-                    <button v-if="!isConnected" class="btn" @click="router.push('login')">Login</button>
+                    <button v-if="!isConnected" class="btn" @click="router.push({ name: 'login' })">Login</button>
                     <button v-else class="btn" @click="logout()">Logout</button>
                 </div>
             </div>
@@ -18,12 +18,17 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useFetch } from '@/composables/useFetch';
 
 const router = useRouter()
-const isConnected = computed(() => window.sessionStorage.getItem('token'))
+const isConnected = ref(false)
 const logout = () => {
     window.sessionStorage.removeItem('token')
+    isConnected.value = false
 }
+onMounted(() => {
+    if(window.sessionStorage.getItem('token')) isConnected.value = true
+})
 </script>
 
 <style>

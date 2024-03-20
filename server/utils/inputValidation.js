@@ -13,3 +13,14 @@ const isAddressValid = str => checkPattern(str,pattern_address)
 const isNameValid = str => checkPattern(str,pattern_name)
 const isEmailValid = str => checkPattern(str,pattern_email)
 const isDateValid = str => checkPattern(str,pattern_date)
+const isZipCodeValid = str => checkPattern(str, pattern_zipcode)
+
+module.exports = {
+    isUsernameValid,
+    isPasswordValid,
+    isAddressValid,
+    isNameValid,
+    isEmailValid,
+    isDateValid,
+    isZipCodeValid
+}

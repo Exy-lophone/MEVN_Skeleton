@@ -10,16 +10,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    birthdate: {
-        type: Date,
-        required: true
-    },
-    address : [String]
 });
 
 module.exports = mongoose.model('User', userSchema);

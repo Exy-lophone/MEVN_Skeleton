@@ -44,7 +44,7 @@ const connect = () => {
         if(!loading.value) {
             if(error.value) { showError.value = true; return; }
             window.sessionStorage.setItem('token', data.value.token)
-            router.push('home')
+            router.push({name: 'home'})
         }
     })
 }
@@ -55,7 +55,7 @@ const register = () => {
         if(!loading.value) {
             if(error.value) { showError.value = true; return; }
             window.sessionStorage.setItem('token', data.value.token)
-            router.push('home')
+            router.push({name: 'home'})
         }
     })
 }
