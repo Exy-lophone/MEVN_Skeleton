@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { isUsernameValid, isPasswordValid } = require('../utils/inputValidation')
 const authVerify = require('../middlewares/authVerify')
+const status = require('../utils/httpResStatusCodes')
 
 //Retrives the secrect key for JWT signature
 const secretKey = process.env.SECRET_KEY;
@@ -14,15 +15,16 @@ const secretKey = process.env.SECRET_KEY;
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
-        if(!isUsernameValid(username)) res.status(400).json({error: 'username is invalid'})
-        if(!isPasswordValid(password)) res.status(400).json({error: 'password is invalid'})
+        if(!username || !password) res.status(status.STATUS_BAD_REQUEST)
+        if(!isUsernameValid(username)) res.status(status.STATUS_BAD_REQUEST).json({error: 'username is invalid'})
+        if(!isPasswordValid(password)) res.status(status.STATUS_BAD_REQUEST).json({error: 'password is invalid'})
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username: username, password: hashedPassword});
+        const user = new User({ username, password: hashedPassword});
         await user.save();
         const token = jwt.sign({userId: user._id}, secretKey, {expiresIn: '1h'});
-        res.status(201).json({ token });
+        res.status(status.STATUS_OK_CREATED).json({ token });
     } catch (err) {
-        res.status(500).json({ error: err.message});
+        res.status(status.STATUS_INTERNALERR).json({ error: err.message});
     }
 });
 
@@ -31,15 +33,17 @@ router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({username: username});
-        if(!user) return res.status(401).json({error: 'Wrong credentials'});
+        if(!user) return res.status(status.STATUS_BAD_REQUEST).json({error: 'Wrong credentials'});
         const match = await bcrypt.compare(password, user.password);
-        if(!match) return res.status(401).json({error: 'Wrong credentials'});
+        if(!match) return res.status(status.STATUS_BAD_REQUEST).json({error: 'Wrong credentials'});
         const token = jwt.sign({userId: user._id}, secretKey, {expiresIn: '1h'});
-        res.status(201).json({token: token});
+        res.status(status.STATUS_OK).json({token: token});
     } catch (err) {
-        res.status(500).json({error: err.message})
+        res.status(status.STATUS_INTERNALERR).json({error: err.message})
     }
 });
 
-router.get('/checkToken', authVerify, (req, res, next) => res.status(200).json({ authentication: true }))
+//Check the validity of the JWT
+router.get('/checkToken', authVerify, (req, res, next) => res.status(status.STATUS_OK).json({ authentication: true }))
+
 module.exports = router;
