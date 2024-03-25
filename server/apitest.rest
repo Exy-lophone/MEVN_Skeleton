@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWY4NDhlN2U1ZWY5NWNmOGMxYzFmNzMiLCJpYXQiOjE3MTEzNTY5NjgsImV4cCI6MTcxMTM2MDU2OH0.p7k-CTiuNjAzLuDL1gje1L7ZfsDjdihrJN-y1XoB2xo
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWY4NDhlN2U1ZWY5NWNmOGMxYzFmNzMiLCJpYXQiOjE3MTEzNzE3MjksImV4cCI6MTcxMTM3NTMyOX0.g3rp7MF6JzeySY8ofhh-xlnCu0mXVILI8qLJRPWPwh0
 
 ###
 POST {{baseUrl}}/auth/login
@@ -24,20 +24,12 @@ Content-Type: application/json
 }
 
 ###
-POST {{baseUrl}}/items/insertMany
+POST {{baseUrl}}/items/insertOne
 Content-Type: application/json
 
-[
-    {
-        "description": "clavier",
-        "quantity": 10,
-        "category": "périphérique",
-        "closet": "INF-B01-ARM1"
-    },
-    {
-        "description": "clavier",
-        "quantity": 10,
-        "category": "périphérique",
-        "closet": "INF-B01-ARM10"
-    }
-]
+{
+    "description": "Souris",
+    "quantity": 10,
+    "category": "périphérique",
+    "closet": "INF-B01-ARM10"
+}

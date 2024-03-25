@@ -1,4 +1,5 @@
 const status = require('./httpResStatusCodes')
+const { isNullUndefined } = require('./inputValidation')
 
 const errMsg = {
     closet: "Closet is invalid (must be INF-{Room}-ARM{closet number}, example:'INF-B01-ARM1')",
@@ -16,7 +17,15 @@ const throwError = (statusCode, msg) => {
     err.statusCode = statusCode
     throw err
 }
-
+/**
+ *
+ * @param {any} value - Value to tests
+ * @param {Number} statusCode - HTTP Response status code
+ * @param {String} msg - Error message
+ */
+const throwErrorWhenNullUndef = (value, statusCode, msg) => {
+    if(isNullUndefined(value)) throwError(statusCode,msg)
+}
 /**
  * 
  * @param {Error} err
@@ -27,4 +36,8 @@ const respondWithErr = (err, res) => {
     res.status(err.statusCode).json({error: err.message})
 }
 
-module.exports = { throwError, respondWithErr, errMsg }
+module.exports = { 
+    throwError,
+    throwErrorWhenNullUndef, 
+    respondWithErr, 
+    errMsg }

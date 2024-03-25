@@ -1,5 +1,10 @@
 const Item = require('../models/item')
 
-const insertOne = async (desc, quantity, category, closetName) => {
-    
+const insertItem = async (description, quantity, category, closet) => {
+    const item = new Item({description,quantity,category,closet})
+    await item.save()
+}
+
+module.exports = {
+    insertItem
 }
