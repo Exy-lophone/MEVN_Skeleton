@@ -32,6 +32,12 @@ Content-Type: application/json
         "description": "clavier",
         "quantity": 10,
         "category": "périphérique",
+        "closet": "INF-B01-ARM1"
+    },
+    {
+        "description": "clavier",
+        "quantity": 10,
+        "category": "périphérique",
         "closet": "INF-B01-ARM10"
     }
 ]

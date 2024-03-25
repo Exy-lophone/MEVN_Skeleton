@@ -7,12 +7,8 @@ const status = require('../utils/httpResStatusCodes')
 const { checkPattern, pattern_closet } = require('../utils/inputValidation')
 const { throwError, respondWithErr, errMsg } = require('../utils/errors')
 
-const insertOne = async (description, quantity, category, closetName) => {
-    
-    return item
-}
-
 /*====================== CREATE =======================*/
+
 router.post('/insertOne', async (req, res) => {
     try {
         const { description, quantity, category, closet: closetName } = req.body
@@ -41,10 +37,10 @@ router.post('/insertMany', async (req, res) => {
             if(!item.description) throwError(status.STATUS_BAD_REQUEST,"Description is required")
             if(!item.quantity) throwError(status.STATUS_BAD_REQUEST,"Quantity is required")
             if(!item.category) throwError(status.STATUS_BAD_REQUEST,"Category is required")
-            if(!item.closetName) throwError(status.STATUS_BAD_REQUEST,"Closet is required")
-            if(!checkPattern(item.closetName, pattern_closet)) throwError(status.STATUS_BAD_REQUEST, errMsg.closet)
-            const closet = await Closet.findOne({name: closetName})
-            if(!closet) throwError(status.STATUS_NOTFOUND, errMsg.closetNotFound(closetName))
+            if(!item.closet) throwError(status.STATUS_BAD_REQUEST,"Closet is required")
+            if(!checkPattern(item.closet, pattern_closet)) throwError(status.STATUS_BAD_REQUEST, errMsg.closet)
+            const closet = await Closet.findOne({name: item.closet})
+            if(!closet) throwError(status.STATUS_NOTFOUND, errMsg.closetNotFound(item.closet))
             itemRecords.push(new Item({description,quantity,category,closet: closet._id}))
         }
         for(let i = 0; i < items.length; i++){
