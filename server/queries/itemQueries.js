@@ -5,6 +5,9 @@ const insertItem = async (description, quantity, category, closet) => {
     await item.save()
 }
 
+const insertManyItem = async(items) => {
+    Item.insertMany(items)
+}
 module.exports = {
     insertItem
 }

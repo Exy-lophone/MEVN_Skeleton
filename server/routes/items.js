@@ -34,10 +34,16 @@ router.post('/insertOne', async (req, res) => {
 router.post('/insertMany', async (req, res) => {
     try {
         const items = req.body
-        items.reduce((acc, elem) => {
-            acc.push(checkObject(elem,itemCriterias))
-            return acc
-        }, [])
+        const parsedItem = items.reduce((acc, elem) => [...acc, {item: elem, err: checkObject(elem,itemCriterias)}], [])
+        const failed = parsedItem.filter(x => x.err.length > 0)
+        const passed = parsedItem.filter(x => x.err.length === 0)
+        const passedWithClosetId = await Promise.all(passed.map(async x => {
+            const closet = await closetQueries.findOneByName(x.item.closet)
+            x.item.closet = closet._id
+            return x
+        }))
+        await Promise.all(passedWithClosetId.map(x => itemQueries.insertItem(x.item.description,x.item.quantity,x.item.category,x.item.closet)))
+        res.status(status.STATUS_OK_CREATED).json({failed})
     } catch (err) {
         respondWithErr(err, res)
     }

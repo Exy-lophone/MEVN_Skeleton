@@ -33,3 +33,27 @@ Content-Type: application/json
     "category": "périphérique",
     "closet": "INF-B01-ARM10"
 }
+
+###
+POST {{baseUrl}}/items/insertMany
+Content-Type: application/json
+
+[
+    {
+        "description": "Macbook",
+        "quantity": 13,
+        "category": "Ordinateur",
+        "closet": "INF-B01-ARM1"
+    },
+    {
+        "description": "Câble HDMI",
+        "quantity": 54,
+        "category": "Câble",
+        "closet": "INF-B01-ARM1"
+    },
+    {
+        "description": "Test",
+        "quantity": 5,
+        "closet": "INF-B01-ARM1"
+    }
+]
