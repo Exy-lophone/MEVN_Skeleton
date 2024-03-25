@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { isUsernameValid, isPasswordValid } = require('../utils/inputValidation')
+const { checkPattern, pattern_password, pattern_username } = require('../utils/inputValidation')
 const authVerify = require('../middlewares/authVerify')
 const status = require('../utils/httpResStatusCodes')
 
@@ -16,8 +16,8 @@ router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
         if(!username || !password) res.status(status.STATUS_BAD_REQUEST)
-        if(!isUsernameValid(username)) res.status(status.STATUS_BAD_REQUEST).json({error: 'username is invalid'})
-        if(!isPasswordValid(password)) res.status(status.STATUS_BAD_REQUEST).json({error: 'password is invalid'})
+        if(!checkPattern(username, pattern_username)) res.status(status.STATUS_BAD_REQUEST).json({error: 'username is invalid'})
+        if(!checkPattern(password, pattern_password)) res.status(status.STATUS_BAD_REQUEST).json({error: 'password is invalid'})
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({ username, password: hashedPassword});
         await user.save();

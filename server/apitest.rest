@@ -1,5 +1,8 @@
+@baseUrl = http://localhost:3000
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWY4NDhlN2U1ZWY5NWNmOGMxYzFmNzMiLCJpYXQiOjE3MTEzNTY5NjgsImV4cCI6MTcxMTM2MDU2OH0.p7k-CTiuNjAzLuDL1gje1L7ZfsDjdihrJN-y1XoB2xo
+
 ###
-POST http://localhost:3000/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -8,5 +11,27 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/auth/checkToken
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWY4NDhlN2U1ZWY5NWNmOGMxYzFmNzMiLCJpYXQiOjE3MTA5NDc4ODMsImV4cCI6MTcxMDk1MTQ4M30.mCaUSmtaMNPpSWiVZ1fgFKfyAbIL5Lp-WmGlB5zkWW8
+GET {{baseUrl}}/auth/checkToken
+Authorization: bearer {{authToken}}
+
+###
+POST {{baseUrl}}/closets/insertOne
+Content-Type: application/json
+
+{
+    "closet": "INF-B01-ARM5",
+    "room": "B01"
+}
+
+###
+POST {{baseUrl}}/items/insertMany
+Content-Type: application/json
+
+[
+    {
+        "description": "clavier",
+        "quantity": 10,
+        "category": "périphérique",
+        "closet": "INF-B01-ARM10"
+    }
+]
