@@ -38,6 +38,16 @@ const throwErrorWhenNaN = (value, statusCode, msg) => {
 }
 /**
  * 
+ * @param {any} value - Value to tests
+ * @param {Number} statusCode - HTTP Response status code
+ * @param {String} msg - Error message
+ * @param {Function} condition - Callback on value, throws error if True is returned
+ */
+const throwErrorWhen = (value, statusCode, msg, condition) => {
+    if(condition(value)) throwError(statusCode, msg)
+}
+/**
+ * 
  * @param {Error} err
  * @param {Response} res 
  */
@@ -48,6 +58,7 @@ const respondWithErr = (err, res) => {
 
 module.exports = { 
     throwError,
+    throwErrorWhen,
     throwErrorWhenNullUndef,
     throwErrorWhenNaN,
     respondWithErr, 

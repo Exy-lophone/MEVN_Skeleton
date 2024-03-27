@@ -45,12 +45,38 @@ GET {{baseUrl}}20
 ###
 GET {{baseUrl}}id/66014ec1622e724ee1249e6c
 
+###
+GET {{baseUrl}}id
+Content-Type: application/json
+
+[
+    "66014ec1622e724ee1249e6c",
+    "6601778edcd7193effce0093",
+]
+
 #===================== UPDATE =====================#
 
 ###
-PATCH {{baseUrl}}id/66014ec1622e724ee1249e6c
+PATCH {{baseUrl}}updateOne
 Content-Type: application/json
 
 {
-    "quantity": 10
+    "id": "66014ec1622e724ee1249e6c",
+    "quantity": 7
 }
+
+###
+PATCH {{baseUrl}}updateMany
+Content-Type: application/json
+
+[
+    {
+        "id": "66014ec1622e724ee1249e6c",
+        "quantity": 5
+    },
+    {
+        "id": "6601778edcd7193effce0093",
+        "quantity": 3,
+        "closet": "hello"
+    }
+]
