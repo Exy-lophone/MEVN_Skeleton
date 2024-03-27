@@ -1,0 +1,56 @@
+@baseUrl = http://localhost:3000/items/
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}insertOne
+Content-Type: application/json
+
+{
+    "description": "Souris",
+    "quantity": 10,
+    "category": "périphérique",
+    "closet": "INF-B01-ARM10"
+}
+
+###
+POST {{baseUrl}}insertMany
+Content-Type: application/json
+
+[
+    {
+        "description": "Macbook air",
+        "quantity": 13,
+        "category": "Ordinateur",
+        "closet": "INF-B01-ARM4"
+    },
+    {
+        "description": "Câble Display Port",
+        "quantity": 54,
+        "category": "Câble",
+        "closet": "INF-B01-ARM10"
+    },
+    {
+        "description": "Test",
+        "quantity": 5,
+        "closet": "INF-B01-ARM1"
+    }
+]
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}20
+
+###
+GET {{baseUrl}}id/66014ec1622e724ee1249e6c
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}id/66014ec1622e724ee1249e6c
+Content-Type: application/json
+
+{
+    "quantity": 10
+}

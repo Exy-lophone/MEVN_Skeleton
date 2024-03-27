@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3000/closets/
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}insertOne
+Content-Type: application/json
+
+{
+    "closet": "INF-B01-ARM5",
+    "room": "B01"
+}
+
+###
+POST {{baseUrl}}insertMany
+Content-Type: application/json
+
+[
+    {
+        "name": "INF-B01-ARM5",
+        "room": "B01"
+    },
+    {
+        "name": "INF-B01-ARM7",
+        "room": "B01"
+    }
+]
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}10

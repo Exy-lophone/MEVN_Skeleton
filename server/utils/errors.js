@@ -4,7 +4,8 @@ const { isNullUndefined } = require('./inputValidation')
 const errMsg = {
     closet: "Closet is invalid (must be INF-{Room}-ARM{closet number}, example:'INF-B01-ARM1')",
     room: "Room is invalid (Correct example: 'A01', 'B11')",
-    closetNotFound: closetName => `${closetName} does not exist in database`
+    closetNotFound: closetName => `${closetName} does not exist in database`,
+    expectedNbrOnReq: path => `Expected number (${path}/{number})`
 }
 
 /**
@@ -28,6 +29,15 @@ const throwErrorWhenNullUndef = (value, statusCode, msg) => {
 }
 /**
  * 
+ * @param {any} value - Value to tests
+ * @param {Number} statusCode - HTTP Response status code
+ * @param {String} msg - Error message
+ */
+const throwErrorWhenNaN = (value, statusCode, msg) => {
+    if(isNaN(value)) throwError(statusCode, msg)
+}
+/**
+ * 
  * @param {Error} err
  * @param {Response} res 
  */
@@ -38,6 +48,8 @@ const respondWithErr = (err, res) => {
 
 module.exports = { 
     throwError,
-    throwErrorWhenNullUndef, 
+    throwErrorWhenNullUndef,
+    throwErrorWhenNaN,
     respondWithErr, 
-    errMsg }
+    errMsg 
+}

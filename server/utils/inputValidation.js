@@ -29,6 +29,7 @@ const isNullUndefined = x => x === null || x === undefined
  * 
  * @param {Object} obj - object to test
  * @param {Array} criterias - array of criterias
+ * @returns - Array of error message if there's any
  */
 const checkObject = (obj, criterias) => {
     return criterias.reduce((acc, crit) => {
