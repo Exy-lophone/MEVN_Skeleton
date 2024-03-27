@@ -7,10 +7,10 @@ POST {{baseUrl}}insertOne
 Content-Type: application/json
 
 {
-    "description": "Souris",
-    "quantity": 10,
-    "category": "périphérique",
-    "closet": "INF-B01-ARM10"
+    "description": "Macbook",
+    "quantity": 17,
+    "category": "Ordinateur Portable",
+    "closet": "INF-B01-ARM2"
 }
 
 ###
@@ -28,12 +28,7 @@ Content-Type: application/json
         "description": "Câble Display Port",
         "quantity": 54,
         "category": "Câble",
-        "closet": "INF-B01-ARM10"
-    },
-    {
-        "description": "Test",
-        "quantity": 5,
-        "closet": "INF-B01-ARM1"
+        "closet": "INF-B01-ARM2"
     }
 ]
 
@@ -43,15 +38,15 @@ Content-Type: application/json
 GET {{baseUrl}}20
 
 ###
-GET {{baseUrl}}id/66014ec1622e724ee1249e6c
+GET {{baseUrl}}selectOne/66014ec1622e724ee1249e6c
 
 ###
-GET {{baseUrl}}id
+GET {{baseUrl}}selectMany
 Content-Type: application/json
 
 [
     "66014ec1622e724ee1249e6c",
-    "6601778edcd7193effce0093",
+    "6601778edcd7193effce0093"
 ]
 
 #===================== UPDATE =====================#
@@ -80,3 +75,8 @@ Content-Type: application/json
         "closet": "hello"
     }
 ]
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}deleteOne/2

@@ -5,13 +5,13 @@ const express = require('express')
 const router = express.Router()
 const status = require('../utils/httpResStatusCodes')
 const { checkObject, makeCriteria, isNullUndefined, pattern_closet } = require('../utils/inputValidation')
-const { throwError, throwErrorWhen, throwErrorWhenNullUndef, throwErrorWhenNaN, respondWithErr, errMsg } = require('../utils/errors')
+const { throwError, throwErrorWhen, respondWithErr, errMsg } = require('../utils/errors')
 const Closet = require('../models/closet')
 const Item = require('../models/item')
 
 /*====================== UTILS =======================*/
 
-const itemCriterias = [
+const createCriterias = [
     makeCriteria('description',true,"string"),
     makeCriteria('quantity',true,"number"),
     makeCriteria('category',true,"string"),
@@ -33,9 +33,17 @@ const multiStatusCode = (passed, failed, ok, bad) => passed.length > 0 ? failed.
 /*====================== QUERIES =======================*/
 
 async function createItem (item) {
-
+    const { description, quantity, category, closet: closetName } = item
+    const closet = await getClosetByName(closetName)
+    throwErrorWhen(closet, status.STATUS_NOTFOUND,errMsg.closetNotFound(closetName),x => isNullUndefined(x))
+    const itemRecord = new Item({ description, quantity, category, closet })
+    itemRecord.save()
+    return itemRecord
 }
 
+async function getClosetByName (name) {
+    return await Closet.findOne({ name })
+}
 async function getCloset (id) {
     return await Closet.findById(id)
 }
@@ -63,6 +71,12 @@ async function updateItem (update) {
     return itemRecord
 }
 
+async function deleteItem (id) {
+    const itemRecord = await Item.findById(id)
+    // throwErrorWhen(itemRecord,status.STATUS_NOTFOUND,`Item with id: ${id} don't exist`, )
+    return result
+}
+
 /*============================================ ROUTES =============================================*/
 
 /*====================== CREATE =======================*/
@@ -70,13 +84,10 @@ async function updateItem (update) {
 router.post('/insertOne', async (req, res) => {
     try {
         const item = req.body
-        const result = checkObject(item, itemCriterias)
-        if(result.length > 0) throwError(status.STATUS_BAD_REQUEST,result)
-        const { description, quantity, category, closet: closetName } = item
-        const closet = await closetQueries.findOneByName(closetName)
-        throwErrorWhenNullUndef(closet, status.STATUS_NOTFOUND, errMsg.closetNotFound(closetName))
-        itemQueries.insertItem(description,quantity,category,closet._id)
-        res.status(status.STATUS_OK_CREATED).json({addedRecords:item})
+        const result = checkObject(item, createCriterias)
+        throwErrorWhen(result,status.STATUS_BAD_REQUEST,result,x => x.length > 0)
+        const itemRecord = await createItem(item)
+        res.status(status.STATUS_OK_CREATED).json(itemRecord)
     } catch (err) {
         respondWithErr(err, res)
     }
@@ -85,27 +96,13 @@ router.post('/insertOne', async (req, res) => {
 router.post('/insertMany', async (req, res) => {
     try {
         const items = req.body
-        if(!Array.isArray(items)) throwError(status.STATUS_BAD_REQUEST, "Request body must be an array of items")
-        const parsedItem = items.map(x => ({item: x, err: checkObject(x,itemCriterias)}))
-        const failed = parsedItem.filter(x => x.err.length > 0)
-        const passed = parsedItem.filter(x => x.err.length === 0)
-        const passedWithClosetId = await Promise.all(passed.map(async x => {
-            const closet = await Closet.findOne({name: x.item.closet})
-            throwErrorWhenNullUndef(closet,status.STATUS_BAD_REQUEST,errMsg.closetNotFound(x.item.closet))
-            x.item.closet = closet._id
-            return x
-        }))
-        const itemRecords = await Promise.all(passedWithClosetId.map(async x => {
-            const description = x.item.description
-            const quantity = x.item.quantity
-            const category = x.item.category
-            const closet = x.item.closet
-            const itemRecord = new Item({description,quantity,category,closet})
-            await itemRecord.save()
-            return itemRecord
-        }))
-        const statusCode = itemRecords.length > 0 ? failed.length > 0 ? status.STATUS_MULTI_STATUS : status.STATUS_OK_CREATED : status.STATUS_BAD_REQUEST
-        res.status(statusCode).json({passed: passedWithClosetId, failed})
+        throwErrorWhen(items,status.STATUS_BAD_REQUEST,"Request body must be an array of items",x => !Array.isArray(x))
+        const parsed = items.map(x => ({item: x, err: checkObject(x, createCriterias)}))
+        const passed = parsed.filter(x => x.err.length === 0)
+        const failed = parsed.filter(x => x.err.length > 0)
+        const itemRecords = await Promise.all(passed.map(x => createItem(x.item)))
+        const statusCode = multiStatusCode(itemRecords,failed,status.STATUS_OK_CREATED,status.STATUS_BAD_REQUEST)
+        res.status(statusCode).json({passed: itemRecords, failed})
     } catch (err) {
         respondWithErr(err, res)
     }
@@ -113,7 +110,7 @@ router.post('/insertMany', async (req, res) => {
 
 /*====================== READ =======================*/
 
-router.get('/id/:id', async (req, res) => {
+router.get('/selectOne/:id', async (req, res) => {
     try {
         const itemRecord = await getItem(req.params.id)
         res.status(status.STATUS_OK).json(itemRecord)
@@ -122,7 +119,7 @@ router.get('/id/:id', async (req, res) => {
     }
 })
 
-router.get('/id', async (req, res) => {
+router.get('/selectMany', async (req, res) => {
     try {
         const ids = req.body
         throwErrorWhen(ids,status.STATUS_BAD_REQUEST,"Body must be an array of item ids", x => !Array.isArray(x))
@@ -140,7 +137,7 @@ router.get('/id', async (req, res) => {
 router.get('/:limit', async (req, res) => {
     try {
         const limit = parseInt(req.params.limit)
-        throwErrorWhenNaN(limit,status.STATUS_BAD_REQUEST,errMsg.expectedNbrOnReq("/items"))
+        throwErrorWhen(limit,status.STATUS_BAD_REQUEST,errMsg.expectedNbrOnReq("/items"),x => isNaN(x))
         const ids = (await Item.find({}, {_id: 1}).limit(limit)).map(x => x._id)
         const itemRecords = await Promise.all(ids.map(x => getItem(x)))
         res.status(status.STATUS_OK).json(itemRecords)
@@ -177,4 +174,14 @@ router.patch('/updateMany', async (req, res) => {
     }
 })
 
+/*====================== DELETE =======================*/
+
+router.delete('/deleteOne/:id', async (req, res) => {
+    try {
+        deleteItem(req.params.id)
+        res.status(status.STATUS_OK_NOCONTENT)
+    } catch (err) {
+        respondWithErr(err, res)
+    }
+})
 module.exports = router
