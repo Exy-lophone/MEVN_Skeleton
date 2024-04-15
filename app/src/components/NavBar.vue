@@ -1,60 +1,37 @@
-<template>
-    <div class="navbar">
-        <div class="main-content">
-            <div class="navbar-content">
-                <h1>Logo</h1>
-                <div class="navbar-links">
-                    <router-link to="#">Link 1</router-link>
-                    <router-link to="#">Link 2</router-link>
-                    <router-link to="#">Link 3</router-link>
-                    <button v-if="!isConnected" class="btn" @click="router.push({ name: 'login' })">Login</button>
-                    <button v-else class="btn" @click="logout()">Logout</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
 <script setup>
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useFetch } from '@/composables/useFetch';
 
-const router = useRouter()
-const isConnected = ref(false)
-const logout = () => {
-    window.sessionStorage.removeItem('token')
-    isConnected.value = false
-}
-onMounted(() => {
-    if(window.sessionStorage.getItem('token')) isConnected.value = true
-})
 </script>
 
-<style>
-.navbar {
-    box-shadow: 0 1rem 1rem lightgray;
-    margin-bottom: 4rem;
-}
-.navbar-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 4rem;
-    padding: 2rem 0;
-}
-.navbar-links {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-.navbar a {
-    color: black;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.2s;
-}
-.navbar a:hover {
-    color: crimson;
-}
+<template>
+    <nav class="outline-shadow">
+        <div class="main-content d-flex">
+            <h1 class="font-size-h1 font-bold">StockManagement</h1>
+            <div class="links d-flex">
+                <router-link to="/" class="font-size-body font-bold">Rechercher</router-link>
+                <router-link to="/add" class="font-size-body font-bold">Ajouter</router-link>
+                <button class="btn-sm btn btn-black">Logout</button>
+            </div>
+        </div>
+    </nav>
+</template>
+
+<style scoped>
+    .main-content {
+        max-width: 100vw;
+        justify-content: space-between;
+        padding: 2rem 4rem;
+    }
+    
+    h1 {
+        color: var(--color-accent);
+    }
+
+    .links {
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .router-link-active {
+        color: var(--color-accent);
+    }
 </style>
