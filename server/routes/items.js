@@ -4,8 +4,10 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const status = require('../utils/httpResStatusCodes')
+const { multiStatusCode } = require('../utils/httpResStatusCodes')
 const { checkObject, makeCriteria, isNullUndefined, pattern_closet } = require('../utils/inputValidation')
-const { throwError, throwErrorWhen, respondWithErr, errMsg } = require('../utils/errors')
+const { throwErrorWhen, respondWithErr, errMsg } = require('../utils/errors')
+const { copyAttrIfNotNull } = require('../utils/objectUtils')
 const Closet = require('../models/closet')
 const Item = require('../models/item')
 
@@ -26,10 +28,6 @@ const updateCriterias = [
     makeCriteria('closet',false,"string",pattern_closet)
 ]
 
-const copyAttrIfNotNull = (obj, attr, toCopy) => obj[attr] = isNullUndefined(toCopy[attr]) ? obj[attr] : toCopy[attr]
-
-const multiStatusCode = (passed, failed, ok, bad) => passed.length > 0 ? failed.length > 0 ? status.STATUS_MULTI_STATUS : ok : bad
-
 /*====================== QUERIES =======================*/
 
 async function createItem (item) {
@@ -44,6 +42,7 @@ async function createItem (item) {
 async function getClosetByName (name) {
     return await Closet.findOne({ name })
 }
+
 async function getCloset (id) {
     return await Closet.findById(id)
 }
@@ -73,8 +72,8 @@ async function updateItem (update) {
 
 async function deleteItem (id) {
     const itemRecord = await Item.findById(id)
-    // throwErrorWhen(itemRecord,status.STATUS_NOTFOUND,`Item with id: ${id} don't exist`, )
-    return result
+    throwErrorWhen(itemRecord,status.STATUS_NOTFOUND,`Item with id: ObjectId(${id}) don't exist`, x => isNullUndefined(x))
+    await Item.deleteOne({_id:itemRecord._id})
 }
 
 /*============================================ ROUTES =============================================*/
@@ -178,8 +177,21 @@ router.patch('/updateMany', async (req, res) => {
 
 router.delete('/deleteOne/:id', async (req, res) => {
     try {
-        deleteItem(req.params.id)
+        await deleteItem(req.params.id)
         res.status(status.STATUS_OK_NOCONTENT)
+    } catch (err) {
+        respondWithErr(err, res)
+    }
+})
+
+router.delete('/deleteMany/', async (req, res) => {
+    try {
+        const ids = req.body
+        throwErrorWhen(ids, status.STATUS_BAD_REQUEST, "Body must be an array of items id to delete", x => !Array.isArray(x))
+        const passed = ids.filter(x => typeof(x) === "string")
+        const failed = ids.filter(x => typeof(x) !== "string")
+        await Promise.all(passed.map(deleteItem))
+        res.status(multiStatusCode(passed,failed,status.STATUS_OK,status.STATUS_BAD_REQUEST)).json({passed,failed})
     } catch (err) {
         respondWithErr(err, res)
     }

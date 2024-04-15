@@ -7,7 +7,7 @@ POST {{baseUrl}}insertOne
 Content-Type: application/json
 
 {
-    "closet": "INF-B01-ARM5",
+    "name": "INF-B01-ARM5",
     "room": "B01"
 }
 
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 [
     {
-        "name": "INF-B01-ARM5",
+        "name": "INF-B01-ARM6",
         "room": "B01"
     },
     {
@@ -30,3 +30,48 @@ Content-Type: application/json
 
 ###
 GET {{baseUrl}}10
+
+###
+GET {{baseUrl}}selectOne/660143c1c4fdc78083e0f54f
+
+###
+GET {{baseUrl}}selectMany
+Content-Type: application/json
+
+[
+    "660143c1c4fdc78083e0f54f",
+    "66014435cbffd1bd46ad4993"
+]
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}updateOne
+Content-Type: application/json
+
+{
+    "id": "661ce8e72cf36a5c9f142a18",
+    "name" : "INF-B02-ARM7",
+    "room": "B02"
+}
+
+###
+PATCH {{baseUrl}}updateMany
+Content-Type: application/json
+
+[
+    {
+        "id": "661ce8e72cf36a5c9f142a18",
+        "name" : "INF-B01-ARM7"
+    },
+    {
+        "id": "661ce8e72cf36a5c9f142a17",
+        "name" : "INF-B05-ARM6",
+        "room": "B05"
+    }
+]
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}deleteOne/660143c1c4fdc78083e0f54f

@@ -79,4 +79,13 @@ Content-Type: application/json
 #===================== DELETE =====================#
 
 ###
-DELETE {{baseUrl}}deleteOne/2
+DELETE {{baseUrl}}deleteOne/661cd096c4f5367a85e924c6
+
+###
+DELETE {{baseUrl}}deleteMany
+Content-Type: application/json
+
+[
+    "661cd283179c1263ce52dbef",
+    "661cd28a179c1263ce52dbf1"
+]

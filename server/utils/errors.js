@@ -34,6 +34,8 @@ const throwErrorWhen = (value, statusCode, msg, condition) => {
  */
 const respondWithErr = (err, res) => {
     if(!err.statusCode) err.statusCode = status.STATUS_INTERNALERR
+    console.log(typeof(err.message))
+    console.log(err.message)
     res.status(err.statusCode).json({error: err.message})
 }
 

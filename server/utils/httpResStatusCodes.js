@@ -6,6 +6,7 @@ const STATUS_BAD_REQUEST = 400
 const STATUS_UNAUTHORIZED = 401
 const STATUS_NOTFOUND = 404
 const STATUS_INTERNALERR = 500
+const multiStatusCode = (passed, failed, ok, bad) => passed.length > 0 ? failed.length > 0 ? STATUS_MULTI_STATUS : ok : bad
 
 module.exports = {
     STATUS_OK,
@@ -15,5 +16,6 @@ module.exports = {
     STATUS_BAD_REQUEST,
     STATUS_UNAUTHORIZED,
     STATUS_NOTFOUND,
-    STATUS_INTERNALERR
+    STATUS_INTERNALERR,
+    multiStatusCode
 }
