@@ -14,21 +14,31 @@
     prefixText: {show:false,text:'Trier par:'},
     width: 10
   }
-
-  function arrowClicked (left) {
-    if(!left) showDropdown.value = true
+  
+  function openDropdown() {
+    showDropdown.value = true
+  }
+  function closeDropdown() {
+    showDropdown.value = false
   }
 </script>
 
 <template>
-  <div class="d-flex">
-    <Textbox v-bind="txtbx" @right-arrow-clicked="arrowClicked"></Textbox>
-    <Dropdown v-if="showDropdown">
+  <div class="content d-flex">
+    <Dropdown :show="showDropdown" @mouseleave="closeDropdown">
+      <template #element>
+        <Textbox v-bind="txtbx" @right-arrow-clicked="openDropdown"></Textbox>
+      </template>
       <p>Item1</p>
       <p>Item2</p>
       <p>Item3</p>
-      <Textbox v-bind="txtbx"></Textbox>
     </Dropdown>
   </div>
 </template>
+
+<style scoped>
+  .content {
+    flex-direction: column;
+  }
+</style>
 
