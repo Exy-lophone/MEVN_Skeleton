@@ -22,7 +22,7 @@
 
 :root {
   --color-background: var(--neutral-0);
-  --color-background-light: var(var(--neutral-20));
+  --color-background-light: var(--neutral-20);
 
   --color-text: var(--neutral-900);
   --color-text-light: var(--neutral-80);
