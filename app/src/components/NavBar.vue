@@ -4,7 +4,7 @@
 
 <template>
     <nav class="outline-shadow">
-        <div class="main-content d-flex">
+        <div class="navbar-content d-flex">
             <h1 class="font-size-h1 font-bold">StockManagement</h1>
             <div class="links d-flex">
                 <router-link to="/" class="font-size-body font-bold">Rechercher</router-link>
@@ -16,7 +16,7 @@
 </template>
 
 <style scoped>
-    .main-content {
+    .navbar-content {
         max-width: 100vw;
         justify-content: space-between;
         padding: 2rem 4rem;

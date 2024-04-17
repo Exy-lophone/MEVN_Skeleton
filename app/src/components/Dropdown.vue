@@ -1,18 +1,14 @@
 <script setup>
     import { onMounted, ref } from 'vue';
 
-    const props = defineProps(['show'])
-    const element = ref(null)
-    onMounted(() => {
-        console.log(element.clientHeight)
-    })
+    const props = defineProps(['show', 'items'])
 </script>
 
 <template>
     <div class="drop-position">
-        <slot name="element"></slot>
+        <slot></slot>
         <div v-if="show" class="dropdown outline-shadow d-flex">
-            <slot></slot>
+            <p v-for="item in items" :key="item" @click="$emit('selected',item)">{{ item }}</p>
         </div>
     </div>
 </template>
@@ -23,15 +19,31 @@
     }
     .dropdown {
         position: absolute;
+        top: 100%;
         z-index: 2;
         background-color: var(--color-background);
-        top: 100%;
         box-sizing: border-box;
         width: 100%;
         flex-direction: column;
+        align-items: start;
         border-radius: 0.5rem;
-        gap: 1rem;
-        padding: 1rem 0.5rem;
+    }
+    .dropdown p {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.5rem 1rem;
         color: var(--color-accent);
+    }
+    .dropdown p:first-child {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+    .dropdown p:last-child {
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+    }
+    .dropdown p:hover {
+        color: var(--color-background);
+        background-color: var(--color-accent);
     }
 </style>
