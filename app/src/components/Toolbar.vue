@@ -1,92 +1,55 @@
 <script setup>
 import Textbox from './Textbox.vue'
 import Dropdown from './Dropdown.vue'
-import { ref } from 'vue'
 
-const showCategoryDrop = ref(false)
-const showOrderDrop = ref(false)
-const showRoomDrop = ref(false)
-const showClosetDrop = ref(false)
-
-const categoryItems = ref(['Description','Quantité','Salle','Armoire'])
-const orderItems = ref(['Croissant','Decroissant'])
-const roomItems = ref(['B01','A01'])
-const closetItems = ref(['INF-B01-ARM01','INF-B01-ARM02','INF-B01-ARM03','INF-B01-ARM04',])
-
-const txtbxSearch = ref({
-    value: '',
-    centerTxt: false,
-    placeholder: 'Recherche...', 
-    textColor: 'var(--color-text)', 
-    leftArrow: {show:false,direction:'up'}, 
-    rightArrow: {show:false,direction:'down'}, 
-    prefixText: {show:false,text:'Trier par:'},
+const txtbxSearch = {
+    placeholder: 'Recherche...',
     width: 30
-})
-const txtbxCategory = {
-    value: 'Catégorie',
-    centerTxt: true,
-    placeholder: '', 
-    textColor: 'var(--color-accent)', 
-    leftArrow: {show:false,direction:'up'}, 
-    rightArrow: {show:true,direction:'down'}, 
-    prefixText: {show:true,text:'Trier par:'},
-    width: 8
 }
-const txtbxOrder = {
-    value: 'Croissant',
-    centerTxt: true,
-    placeholder: '', 
-    textColor: 'var(--color-accent)', 
-    leftArrow: {show:false,direction:'up'}, 
-    rightArrow: {show:true,direction:'down'}, 
-    prefixText: {show:true,text:'Ordre:'},
-    width: 8
+const sortby = {
+    items: [
+        {display:'Description',value:'description'},
+        {display:'Catégorie',value:'category'},
+        {display:'Quantité',value:'quantity'},
+        {display:'Salle',value:'room'},
+        {display:'Armoire',value:'closet'}
+    ],
+    prefixText: {show:true,text:'Trier par:'}
 }
-const txtbxRoom = {
-    value: 'B01',
-    centerTxt: true,
-    placeholder: '', 
-    textColor: 'var(--color-accent)', 
-    leftArrow: {show:false,direction:'up'}, 
-    rightArrow: {show:true,direction:'down'}, 
-    prefixText: {show:true,text:'Salle:'},
-    width: 3
+const orderby = {
+    items: [
+        {display:'Croissant',value:'ascending'},
+        {display:'Decroissant',value:'descending'}
+    ],
+    prefixText: {show:true,text:'Ordre:'}
 }
-const txtbxCloset = ref({
-    value: 'INF-B01-ARM01',
-    centerTxt: true,
-    placeholder: '', 
-    textColor: 'var(--color-accent)', 
-    leftArrow: {show:false,direction:'up'}, 
-    rightArrow: {show:true,direction:'down'}, 
-    prefixText: {show:true,text:'Armoire:'},
-    width: 13
-})
+const roomFilter = {
+    items: [
+        {display:'B01',value:'B01'},
+        {display:'A01',value:'A01'}
+    ],
+    prefixText: {show:true,text:'Salle:'}
+}
+const closetFilter = {
+    items: [
+        {display:'INF-B01-ARM01',value:'INF-B01-ARM01'},
+        {display:'INF-B01-ARM02',value:'INF-B01-ARM02'},
+        {display:'INF-B01-ARM03',value:'INF-B01-ARM03'},
+        {display:'INF-B01-ARM04',value:'INF-B01-ARM04'}
+    ],
+    prefixText: {show:true,text:'Armoire:'}
+}
 
-function categorySelected (item) {
-    categoryItems.value = categoryItems.value.filter(x => x !== item)
-    categoryItems.value.push(txtbxCategory.value)
-    txtbxCategory.value = item
-}
 </script>
 
 <template>
     <div class="toolbar-content outline-shadow d-flex">
         <div class="sorting-elements d-flex">
             <Textbox v-bind="txtbxSearch"></Textbox>
-            <Dropdown :items="categoryItems" :show="showCategoryDrop" @mouseleave="showCategoryDrop = false" @selected="categorySelected">
-                <Textbox v-bind="txtbxCategory" @right-arrow-clicked="showCategoryDrop = true" :key="txtbxCategory.value"></Textbox>
-            </Dropdown>
-            <Dropdown :items="orderItems" :show="showOrderDrop" @mouseleave="showOrderDrop = false">
-                <Textbox v-bind="txtbxOrder" @right-arrow-clicked="showOrderDrop = true"></Textbox>
-            </Dropdown>
-            <Dropdown :items="roomItems" :show="showRoomDrop" @mouseleave="showRoomDrop = false">
-                <Textbox v-bind="txtbxRoom" @right-arrow-clicked="showRoomDrop = true"></Textbox>
-            </Dropdown>
-            <Dropdown :items="closetItems" :show="showClosetDrop" @mouseleave="showClosetDrop = false">
-                <Textbox v-bind="txtbxCloset" @right-arrow-clicked="showClosetDrop = true"></Textbox>
-            </Dropdown>
+            <Dropdown v-bind="sortby"></Dropdown>
+            <Dropdown v-bind="orderby"></Dropdown>
+            <Dropdown v-bind="roomFilter"></Dropdown>
+            <Dropdown v-bind="closetFilter"></Dropdown>
         </div>
         <div class="sorting-interface d-flex">
             <button class="btn-blue btn-xl">tout sélectionner</button>

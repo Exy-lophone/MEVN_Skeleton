@@ -2,7 +2,38 @@
 import { ref } from 'vue';
 import Arrow from '@/components/Arrow.vue'
 
-const props = defineProps(['value','centerTxt','placeholder','textColor','leftArrow', 'rightArrow', 'prefixText', 'width'])
+const props = defineProps([
+    'value',
+    'centerTxt',
+    'readonly',
+    'placeholder',
+    'textColor',
+    'leftArrow',
+    'rightArrow',
+    'prefixText',
+    'width'
+])
+
+const value = ref(props.value)
+const centerTxt = ref(props.centerTxt)
+const readonly = ref(props.readonly)
+const placeholder = ref(props.placeholder)
+const textColor = ref(props.textColor)
+const leftArrow = ref(props.leftArrow)
+const rightArrow = ref(props.rightArrow)
+const prefixText = ref(props.prefixText)
+const width = ref(props.width)
+
+//Set default values
+if(!value.value) value.value = ''
+if(!centerTxt.value) centerTxt.value = false
+if(!readonly.value) centerTxt.value = false
+if(!placeholder.value) placeholder.value = ''
+if(!textColor.value) textColor.value = 'var(--color-text)'
+if(!leftArrow.value) leftArrow.value = {show:false,direction:'down'}
+if(!rightArrow.value) rightArrow.value = {show:false,direction:'down'}
+if(!prefixText.value) prefixText.value = {show:false,text:''}
+if(!width.value) width.value = 10
 const input = ref(props.value)
 </script>
 
@@ -10,7 +41,16 @@ const input = ref(props.value)
     <div class="textbox inner-shadow d-flex">
         <Arrow v-if="leftArrow.show" :direction="leftArrow.direction" @click="$emit('leftArrowClicked',true)"></Arrow>
         <p v-if="prefixText.show">{{ prefixText.text }}</p>
-        <input class="font-size-body" :class="{centerTxt: centerTxt}" :style="{color: textColor, width: width+'ch'}" :placeholder="placeholder" type="text" v-model="input">
+        <p :style="{color: textColor}" v-if="readonly">{{ input }}</p>
+        <input v-else 
+            class="font-size-body textbox-value" 
+            :class="{centerTxt: centerTxt}" 
+            :style="{color: textColor, width: width+'ch'}" 
+            :placeholder="placeholder" 
+            type="text" 
+            v-model="input"
+            @keyup.enter="$emit('submit',input)"
+        >
         <Arrow v-if="rightArrow.show" :direction="rightArrow.direction" @click="$emit('rightArrowClicked',false)"></Arrow>
     </div>
 </template>
