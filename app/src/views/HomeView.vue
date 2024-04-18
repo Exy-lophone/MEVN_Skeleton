@@ -1,10 +1,13 @@
 <script setup>
 import Toolbar from '@/components/Toolbar.vue'
+import ItemList from '@/components/ItemList.vue'
+
 </script>
 
 <template>
   <div class="main-content d-flex">
     <Toolbar></Toolbar>
+    <ItemList></ItemList>
   </div>
 </template>
 

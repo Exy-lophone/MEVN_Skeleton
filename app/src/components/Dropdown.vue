@@ -21,7 +21,6 @@ else txtbx.textColor = props.textColor
 function itemSelected(item, index) {
     selectable.value[index] = selected.value
     selected.value = item
-    console.log(selectable.value)
     show.value = false
     emit('selected',item.value)
 }
