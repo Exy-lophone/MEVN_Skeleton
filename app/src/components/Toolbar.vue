@@ -3,8 +3,8 @@ import Textbox from './Textbox.vue'
 import Dropdown from './Dropdown.vue'
 import DownloadIco from '@/components/icons/DownloadIco.vue'
 import TrashIco from '@/components/icons/TrashIco.vue'
-
-import { search } from '@/search.js'
+import search from '@/search.js'
+import { onMounted } from 'vue'
 
 const txtbxSearch = {
     placeholder: 'Recherche...',
@@ -46,25 +46,31 @@ const closetFilter = {
     prefixText: {show:true,text:'Armoire:'}
 }
 
+onMounted(() => {
+    search.options.sortBy = sortby.items[0].value
+    search.options.orderBy = orderby.items[0].value
+    search.options.roomFilter = roomFilter.items[0].value
+    search.options.closetFilter = closetFilter.items[0].value
+})
 </script>
 
 <template>
     <div class="toolbar-content outline-shadow d-flex">
         <div class="sorting-elements d-flex">
-            <Textbox v-bind="txtbxSearch"></Textbox>
-            <Dropdown v-bind="sortby" @selected="x => search.sortBy = x"></Dropdown>
-            <Dropdown v-bind="orderby" @selected="x => search.orderBy = x"></Dropdown>
-            <Dropdown v-bind="roomFilter" @selected="x => search.roomFilter = x"></Dropdown>
-            <Dropdown v-bind="closetFilter" @selected="x => search.closetFilter = x"></Dropdown>
+            <Textbox v-bind="txtbxSearch" @submit="x => search.options.research = x"></Textbox>
+            <Dropdown v-bind="sortby" @selected="x => search.options.sortBy = x"></Dropdown>
+            <Dropdown v-bind="orderby" @selected="x => search.options.orderBy = x"></Dropdown>
+            <Dropdown v-bind="roomFilter" @selected="x => search.options.roomFilter = x"></Dropdown>
+            <Dropdown v-bind="closetFilter" @selected="x => search.options.closetFilter = x"></Dropdown>
         </div>
         <div class="sorting-interface d-flex">
             <button class="btn-blue btn-xl" @click="search.selectAll()">tout sélectionner</button>
-            <div v-if="search.selectedIds.length > 0" class="sorting-interface-buttons d-flex">
+            <div v-if="search.selection.ids.length > 0" class="sorting-interface-buttons d-flex">
                 <button class="btn-blue btn">Modifier</button>
                 <button class="btn-blue d-flex" style="width: 2.1875rem;"><DownloadIco></DownloadIco></button>
                 <button class="btn-red d-flex" style="width: 2.1875rem;"><TrashIco></TrashIco></button>
             </div>
-            <p class="font-size-body font-bold">{{ search.results }} résultat(s)</p>
+            <p class="font-size-body font-bold">{{ search.options.results }} résultat(s)</p>
         </div>
     </div>
 </template>

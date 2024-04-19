@@ -1,7 +1,7 @@
 <script setup>
 import Toolbar from '@/components/Toolbar.vue'
 import ItemList from '@/components/ItemList.vue'
-import { search } from '@/search'
+import search from '@/search'
 </script>
 
 <template>
