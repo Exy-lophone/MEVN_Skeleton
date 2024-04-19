@@ -17,7 +17,8 @@
 
 <style scoped>
     .navbar-content {
-        max-width: 100vw;
+        margin: auto;
+        max-width: 120rem;
         justify-content: space-between;
         padding: 2rem 4rem;
     }

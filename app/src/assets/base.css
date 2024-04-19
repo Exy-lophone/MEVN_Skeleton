@@ -103,7 +103,6 @@ button {
   border-radius: 0.5em;
   font-size: 1rem;
   font-weight: 700;
-  width: 100%;
   padding: 0.5em 0;
   color: var(--color-background);
 }
