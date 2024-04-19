@@ -1,5 +1,6 @@
 <script setup>
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 </script>
 
 <template>
@@ -9,7 +10,7 @@
             <div class="links d-flex">
                 <router-link to="/" class="font-size-body font-bold">Rechercher</router-link>
                 <router-link to="/add" class="font-size-body font-bold">Ajouter</router-link>
-                <button class="btn-sm btn btn-black">Logout</button>
+                <button class="btn-sm btn btn-black" @click="router.push('login')">Logout</button>
             </div>
         </div>
     </nav>

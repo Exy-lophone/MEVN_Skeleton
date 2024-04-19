@@ -7,9 +7,18 @@ const { items, error, loading, fetchItems } = useFetchItems()
 const itemlist = ref(null)
 
 watch(loading, () => {
-    if(!loading.value) search.options.results = items.value.length
+    if(!loading.value) {
+        search.options.results = items.value.length
+        items.value.sort((a, b) => a.description < b.description ? -1 : 1)
+        items.value.sort((a, b) => a.description < b.description ? -1 : 1)
+    }
 })
 
+watch(search.options, () => {
+    if(search.options.sortBy === 'quantity') {
+        items.value.sort((a, b) => a.quantity - b.quantity)
+    }
+})
 function keydownEventHandler(event) {
     if(event.key !== 'Escape') return
     search.clearSelection()
@@ -35,7 +44,9 @@ onUnmounted(() => {
             <p class="itemlist-room font-size-body font-bold">Salle</p>
             <p class="itemlist-closet font-size-body font-bold">Armoire</p>
         </div>
-        <div 
+        <div v-if="loading" class="itemlist-loading d-flex font-size-h5">Loading...</div>
+        <div
+            v-else 
             v-for="(item, index) in items" 
             :key="item.description"
             :class="{
@@ -64,6 +75,10 @@ onUnmounted(() => {
 
     .itemlist p {
         text-align: center;
+    }
+
+    .itemlist-loading {
+        padding: 1rem;
     }
 
     .itemlist-header {
