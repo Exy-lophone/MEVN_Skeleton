@@ -13,7 +13,6 @@ watch(items, () => {
 watch(search.selection, () => {
     search.ids.value = items.value
     .filter((x,i) => i >= search.selection.start && i <= search.selection.end)
-    .map(x => x._id)
 })
 
 watch(search.options, () => {
@@ -42,6 +41,7 @@ onMounted(() => {
     window.addEventListener('mouseup',search.stopSelection)
     window.addEventListener('keydown',keydownEventHandler)
 })
+
 onUnmounted(() => {
     window.removeEventListener('mouseup',search.stopSelection)
     window.removeEventListener('keydown',keydownEventHandler)
