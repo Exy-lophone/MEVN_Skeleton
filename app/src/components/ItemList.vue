@@ -11,7 +11,9 @@ watch(items, () => {
 })
 
 watch(search.selection, () => {
-    search.updateIds(items.value)
+    search.ids.value = items.value
+    .filter((x,i) => i >= search.selection.start && i <= search.selection.end)
+    .map(x => x._id)
 })
 
 watch(search.options, () => {
@@ -47,7 +49,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <p v-if="!loading">{{ search.selection }}</p>
     <div class="itemlist outline-shadow" ref="itemlist">
         <div class="itemlist-header d-flex">
             <p class="itemlist-description font-size-body font-bold">Description</p>

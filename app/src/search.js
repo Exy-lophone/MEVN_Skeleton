@@ -9,9 +9,9 @@ const options = reactive({
 })
 
 const results = ref(0)
+const ids = ref([])
 
 const selection = reactive({
-    ids: [],
     mode: false,
     init: -1,
     start: -1,
@@ -58,10 +58,6 @@ function selectAll () {
     selection.end = results.value - 1
 }
 
-function updateIds (items) {
-    // selection.ids = items.filter((x,i) => i >= selection.start && i <= selection.end).map(x => x._id)
-}
-
 export default {
     options,
     results,
@@ -72,5 +68,5 @@ export default {
     handleSelection,
     isIndexSelected,
     selectAll,
-    updateIds
+    ids
 }

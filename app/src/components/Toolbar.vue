@@ -66,7 +66,7 @@ onMounted(() => {
         </div>
         <div class="sorting-interface d-flex">
             <button class="btn-blue btn-xl" @click="search.selectAll()">tout sélectionner</button>
-            <div v-if="search.selection.ids.length > 0" class="sorting-interface-buttons d-flex">
+            <div v-if="search.ids.value.length > 0" class="sorting-interface-buttons d-flex">
                 <button class="btn-blue btn">Modifier</button>
                 <button class="btn-blue d-flex" style="width: 2.1875rem;"><DownloadIco></DownloadIco></button>
                 <button class="btn-red d-flex" style="width: 2.1875rem;"><TrashIco></TrashIco></button>
