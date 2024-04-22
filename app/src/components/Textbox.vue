@@ -29,8 +29,8 @@ const width = ref(props.width)
 //Set default values
 if(!value.value) value.value = ''
 if(!type.value) type.value = 'text'
-if(!centerTxt.value) centerTxt.value = false
-if(!readonly.value) centerTxt.value = false
+// if(!centerTxt.value) centerTxt.value = false
+// if(!readonly.value) readonly.value = false
 if(!placeholder.value) placeholder.value = ''
 if(!textColor.value) textColor.value = 'var(--color-text)'
 if(!leftArrow.value) leftArrow.value = {show:false,direction:'down'}
@@ -38,7 +38,6 @@ if(!rightArrow.value) rightArrow.value = {show:false,direction:'down'}
 if(!prefixText.value) prefixText.value = {show:false,text:''}
 if(!width.value) width.value = 10
 const input = ref(props.value)
-
 watch(input,() => {
     emit('vmodel',input.value)
 })

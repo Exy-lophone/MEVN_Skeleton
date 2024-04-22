@@ -1,17 +1,17 @@
 <script setup>
 import modal from '@/components/modal.vue'
 import trash from '@/components/icons/TrashIco.vue'
-import showDelete from '@/delete.js'
+import modalMode from '@/modals.js'
 </script>
 
 <template>
-    <modal v-if="showDelete" @background-clicked="showDelete=false">
+    <modal v-if="modalMode.delete" @background-clicked="modalMode.delete=false">
         <div class="delete-modal d-flex">
             <trash :width="63" :height="81" color="var(--color-error)"></trash>
             <p>Êtes-vous sûr(e) de vouloir<br>supprimer ces éléments</p>
             <div class="delete-modal-buttons d-flex">
-                <button class="btn-lg btn-black" @click="showDelete = false">Annuler</button>
-                <button class="btn-lg btn-red" @click="showDelete = false">Supprimer</button>
+                <button class="btn-lg btn-black" @click="modalMode.delete = false">Annuler</button>
+                <button class="btn-lg btn-red" @click="modalMode.delete = false">Supprimer</button>
             </div>
         </div>
     </modal>
@@ -29,4 +29,4 @@ import showDelete from '@/delete.js'
     .delete-modal-buttons {
         gap: 1rem
     }
-</style>
+</style>@/modals.js

@@ -4,7 +4,7 @@ import Dropdown from './Dropdown.vue'
 import DownloadIco from '@/components/icons/DownloadIco.vue'
 import TrashIco from '@/components/icons/TrashIco.vue'
 import search from '@/search.js'
-import showDelete from '@/delete.js'
+import modalMode from '@/modals.js'
 import { onMounted } from 'vue'
 
 const txtbxSearch = {
@@ -68,9 +68,9 @@ onMounted(() => {
         <div class="sorting-interface d-flex">
             <button class="btn-blue btn-xl" @click="search.selectAll()">tout sélectionner</button>
             <div v-if="search.ids.value.length > 0" class="sorting-interface-buttons d-flex">
-                <button class="btn-blue btn">Modifier</button>
+                <button class="btn-blue btn" @click="modalMode.modify = true">Modifier</button>
                 <button class="btn-blue d-flex" style="width: 2.1875rem;"><DownloadIco></DownloadIco></button>
-                <button class="btn-red d-flex" @click="showDelete = true" style="width: 2.1875rem;"><TrashIco></TrashIco></button>
+                <button class="btn-red d-flex" @click="modalMode.delete = true" style="width: 2.1875rem;"><TrashIco></TrashIco></button>
             </div>
             <p class="font-size-body font-bold">{{ search.results }} résultat(s)</p>
         </div>
@@ -94,4 +94,4 @@ onMounted(() => {
     .sorting-interface-buttons {
         gap: 1.5rem;
     }
-</style>
+</style>@/modals.js
