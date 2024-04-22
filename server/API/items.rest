@@ -3,18 +3,7 @@
 #===================== CREATE =====================#
 
 ###
-POST {{baseUrl}}insertOne
-Content-Type: application/json
-
-{
-    "description": "Macbook",
-    "quantity": 17,
-    "category": "Ordinateur Portable",
-    "closet": "INF-B01-ARM2"
-}
-
-###
-POST {{baseUrl}}insertMany
+POST {{baseUrl}}
 Content-Type: application/json
 
 [
@@ -22,70 +11,67 @@ Content-Type: application/json
         "description": "Macbook air",
         "quantity": 13,
         "category": "Ordinateur",
-        "closet": "INF-B01-ARM4"
+        "closet": "INF-A01-ARM1"
     },
     {
         "description": "Câble Display Port",
         "quantity": 54,
         "category": "Câble",
-        "closet": "INF-B01-ARM2"
+        "closet": "INF-A01-ARM1"
+    },
+    {
+        "description": "Tablette",
+        "quantity": 4,
+        "category": "tablette",
+        "closet": "INF-A01-ARM1"
+    },
+    {
+        "description": "Post-it",
+        "quantity": 205,
+        "category": "papeterie",
+        "closet": "INF-A01-ARM1"
     }
 ]
 
 #===================== READ =====================#
 
 ###
-GET {{baseUrl}}20
+GET {{baseUrl}}20-quantity-ascending-none-none-
 
 ###
-GET {{baseUrl}}selectOne/66014ec1622e724ee1249e6c
-
-###
-GET {{baseUrl}}selectMany
+GET {{baseUrl}}
 Content-Type: application/json
 
 [
-    "66014ec1622e724ee1249e6c",
-    "6601778edcd7193effce0093"
+    "6625ff9ecc1102663e38ac99",
+    "6625ff9ecc1102663e38ac9b"
 ]
 
 #===================== UPDATE =====================#
 
 ###
-PATCH {{baseUrl}}updateOne
-Content-Type: application/json
-
-{
-    "id": "66014ec1622e724ee1249e6c",
-    "quantity": 7
-}
-
-###
-PATCH {{baseUrl}}updateMany
+PATCH {{baseUrl}}
 Content-Type: application/json
 
 [
     {
-        "id": "66014ec1622e724ee1249e6c",
-        "quantity": 5
+        "id": "6625ff9ecc1102663e38ac99",
+        "quantity": 5,
+        "closet": "INF-B01-ARM1"
     },
     {
-        "id": "6601778edcd7193effce0093",
-        "quantity": 3,
-        "closet": "hello"
+        "id": "6625ff9ecc1102663e38ac9b",
+        "quantity": 50
     }
 ]
 
 #===================== DELETE =====================#
 
 ###
-DELETE {{baseUrl}}deleteOne/661cd096c4f5367a85e924c6
-
-###
-DELETE {{baseUrl}}deleteMany
+DELETE {{baseUrl}}
 Content-Type: application/json
 
 [
-    "661cd283179c1263ce52dbef",
-    "661cd28a179c1263ce52dbf1"
+    "6625ff9ecc1102663e38ac99",
+    "6625ff9ecc1102663e38ac9b"
 ]

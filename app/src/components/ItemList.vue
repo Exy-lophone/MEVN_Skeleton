@@ -6,26 +6,37 @@ import search from '@/search.js'
 const { items, error, loading, fetchItems } = useFetchItems()
 const itemlist = ref(null)
 
-watch(loading, () => {
-    if(!loading.value) {
-        search.options.results = items.value.length
-        items.value.sort((a, b) => a.description < b.description ? -1 : 1)
-        items.value.sort((a, b) => a.description < b.description ? -1 : 1)
-    }
+watch(items, () => {
+    search.results.value = items.value.length
+})
+
+watch(search.selection, () => {
+    search.updateIds(items.value)
 })
 
 watch(search.options, () => {
-    if(search.options.sortBy === 'quantity') {
-        items.value.sort((a, b) => a.quantity - b.quantity)
-    }
+    fetchItems(
+        search.options.sortBy,
+        search.options.orderBy,
+        search.options.roomFilter,
+        search.options.closetFilter,
+        search.options.research
+    )
 })
+
 function keydownEventHandler(event) {
     if(event.key !== 'Escape') return
     search.clearSelection()
 }
 
 onMounted(() => {
-    fetchItems()
+    fetchItems(
+        search.options.sortBy,
+        search.options.orderBy,
+        search.options.roomFilter,
+        search.options.closetFilter,
+        search.options.research
+    )
     window.addEventListener('mouseup',search.stopSelection)
     window.addEventListener('keydown',keydownEventHandler)
 })
@@ -36,6 +47,7 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <p v-if="!loading">{{ search.selection }}</p>
     <div class="itemlist outline-shadow" ref="itemlist">
         <div class="itemlist-header d-flex">
             <p class="itemlist-description font-size-body font-bold">Description</p>
@@ -56,8 +68,8 @@ onUnmounted(() => {
                 'selected-top': index === search.selection.start, 
                 'selected-bottom': index === search.selection.end 
             }" 
-            @mousedown.left.prevent="search.initSelection(index,items)"
-            @mouseenter="search.handleSelection(index,items)"
+            @mousedown.left.prevent="search.initSelection(index)"
+            @mouseenter="search.handleSelection(index)"
         >
             <p class="itemlist-description">{{ item.description }}</p>
             <p class="itemlist-quantity">{{ item.quantity }}</p>

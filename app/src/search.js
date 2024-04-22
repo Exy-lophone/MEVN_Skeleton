@@ -1,4 +1,4 @@
-import { reactive, readonly } from "vue";
+import { ref, reactive, readonly } from "vue";
 
 const options = reactive({
     research: '',
@@ -6,8 +6,9 @@ const options = reactive({
     orderBy: '',
     roomFilter: '',
     closetFilter: '',
-    results: 0
 })
+
+const results = ref(0)
 
 const selection = reactive({
     ids: [],
@@ -17,12 +18,11 @@ const selection = reactive({
     end: -1
 })
 
-function initSelection (index, items) {
+function initSelection (index) {
     selection.mode = true
     selection.init = index
     selection.start = index
     selection.end = index
-    selection.ids = [items[index]._id]
 }
 
 function stopSelection () {
@@ -37,7 +37,7 @@ function clearSelection () {
     selection.ids = []
 }
 
-function handleSelection (index, items) {
+function handleSelection (index) {
     if(!selection.mode) return
     if(index >= selection.init) {
         selection.start = selection.init
@@ -46,7 +46,6 @@ function handleSelection (index, items) {
         selection.end = selection.init
         selection.start = index
     }
-    selection.ids = items.filter((x,i) => i >= selection.start && i <= selection.end).map(x => x._id)
 }
 
 function isIndexSelected (index) {
@@ -56,16 +55,22 @@ function isIndexSelected (index) {
 function selectAll () {
     selection.init = 0
     selection.start = 0
-    selection.end = options.results - 1
+    selection.end = results.value - 1
+}
+
+function updateIds (items) {
+    // selection.ids = items.filter((x,i) => i >= selection.start && i <= selection.end).map(x => x._id)
 }
 
 export default {
     options,
+    results,
     selection: readonly(selection),
     initSelection,
     stopSelection,
     clearSelection,
     handleSelection,
     isIndexSelected,
-    selectAll
+    selectAll,
+    updateIds
 }

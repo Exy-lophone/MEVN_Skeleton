@@ -80,19 +80,7 @@ async function deleteItem (id) {
 
 /*====================== CREATE =======================*/
 
-router.post('/insertOne', async (req, res) => {
-    try {
-        const item = req.body
-        const result = checkObject(item, createCriterias)
-        throwErrorWhen(result,status.STATUS_BAD_REQUEST,result,x => x.length > 0)
-        const itemRecord = await createItem(item)
-        res.status(status.STATUS_OK_CREATED).json(itemRecord)
-    } catch (err) {
-        respondWithErr(err, res)
-    }
-})
-
-router.post('/insertMany', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const items = req.body
         throwErrorWhen(items,status.STATUS_BAD_REQUEST,"Request body must be an array of items",x => !Array.isArray(x))
@@ -109,16 +97,7 @@ router.post('/insertMany', async (req, res) => {
 
 /*====================== READ =======================*/
 
-router.get('/selectOne/:id', async (req, res) => {
-    try {
-        const itemRecord = await getItem(req.params.id)
-        res.status(status.STATUS_OK).json(itemRecord)
-    } catch (err) {
-        respondWithErr(err, res)
-    }
-})
-
-router.get('/selectMany', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const ids = req.body
         throwErrorWhen(ids,status.STATUS_BAD_REQUEST,"Body must be an array of item ids", x => !Array.isArray(x))
@@ -133,12 +112,30 @@ router.get('/selectMany', async (req, res) => {
     }
 })
 
-router.get('/:limit', async (req, res) => {
+router.get('/:limit-:sortBy-:orderBy-:roomFilter-:closetFilter-:research?', async (req, res) => {
     try {
-        const limit = parseInt(req.params.limit)
+        const { limit, sortBy, orderBy, roomFilter, closetFilter, research} = req.params
         throwErrorWhen(limit,status.STATUS_BAD_REQUEST,errMsg.expectedNbrOnReq("/items"),x => isNaN(x))
-        const ids = (await Item.find({}, {_id: 1}).limit(limit)).map(x => x._id)
-        const itemRecords = await Promise.all(ids.map(x => getItem(x)))
+        const aggregation = []
+        aggregation.push({$lookup: {from:"closets",localField:"closet",foreignField:"_id", as:"closet"}})
+        aggregation.push({ $unwind : "$closet" })
+        if(roomFilter !== 'none') {
+            aggregation.push(
+                {$match: {"closet.room": roomFilter}}
+            )
+        }
+        if(closetFilter !== 'none') {
+            aggregation.push(
+                {$match: {"closet.name": closetFilter}}
+            )
+        }
+        if(research) {
+            aggregation.push(
+                {$match: { description: new RegExp(research,"i") }}
+            )
+        }
+        aggregation.push({$sort: {[sortBy]: orderBy === 'descending' ? -1 : 1}})
+        const itemRecords = await Item.aggregate(aggregation)
         res.status(status.STATUS_OK).json(itemRecords)
     } catch (err) {
         respondWithErr(err, res)
@@ -147,19 +144,7 @@ router.get('/:limit', async (req, res) => {
 
 /*====================== UPDATE =======================*/
 
-router.patch('/updateOne', async (req, res) => {
-    try {
-        const update = req.body
-        const result = checkObject(update, updateCriterias)
-        throwErrorWhen(result,status.STATUS_BAD_REQUEST,result,x => x.length > 0)
-        const updatedRecord = await updateItem(update)
-        res.status(status.STATUS_OK).json(updatedRecord)
-    } catch (err) {
-        respondWithErr(err, res)
-    }
-})
-
-router.patch('/updateMany', async (req, res) => {
+router.patch('/', async (req, res) => {
     try {
         const updates = req.body
         throwErrorWhen(updates,status.STATUS_BAD_REQUEST,"Body must be array of items to update", x => !Array.isArray(x))
@@ -175,16 +160,7 @@ router.patch('/updateMany', async (req, res) => {
 
 /*====================== DELETE =======================*/
 
-router.delete('/deleteOne/:id', async (req, res) => {
-    try {
-        await deleteItem(req.params.id)
-        res.status(status.STATUS_OK_NOCONTENT)
-    } catch (err) {
-        respondWithErr(err, res)
-    }
-})
-
-router.delete('/deleteMany/', async (req, res) => {
+router.delete('/', async (req, res) => {
     try {
         const ids = req.body
         throwErrorWhen(ids, status.STATUS_BAD_REQUEST, "Body must be an array of items id to delete", x => !Array.isArray(x))

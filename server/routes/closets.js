@@ -56,19 +56,7 @@ async function deleteCloset(id) {
 
 /*====================== CREATE =======================*/
 
-router.post('/insertOne', async (req, res) => {
-    try{
-        const closet = req.body
-        const errors = checkObject(closet,closetCriterias)
-        throwErrorWhen(errors, status.STATUS_BAD_REQUEST, errors, x => errors.length > 0)
-        const closetRecord = await createCloset(closet.name, closet.room)
-        res.status(status.STATUS_OK_CREATED).json({closetRecord})
-    } catch (err) {
-        respondWithErr(err, res)
-    }
-})
-
-router.post('/insertMany', async (req, res) => {
+router.post('/', async (req, res) => {
     try{
         const closets = req.body
         throwErrorWhen(closets, status.STATUS_BAD_REQUEST, "Request body must be an array of closets", x => !Array.isArray(x))
@@ -84,16 +72,7 @@ router.post('/insertMany', async (req, res) => {
 
 /*====================== READ =======================*/
 
-router.get('/selectOne/:id', async (req, res) => {
-    try {
-        const closetRecord = await getCloset(req.params.id)
-        res.status(status.STATUS_OK).json(closetRecord)
-    } catch (err) {
-        respondWithErr(err,res)
-    }
-})
-
-router.get('/selectMany', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const ids = req.body
         throwErrorWhen(ids,status.STATUS_BAD_REQUEST,"Body must be an array of closets id", x => !Array.isArray(x))
@@ -117,19 +96,7 @@ router.get('/:limit', async (req, res) => {
 
 /*====================== UPDATE =======================*/
 
-router.patch('/updateOne', async (req, res) => {
-    try {
-        const update = req.body
-        const errors = checkObject(update,updateCriterias)
-        throwErrorWhen(errors,status.STATUS_BAD_REQUEST,errors,x => x.length > 0)
-        const updatedRecord = await updateCloset(update)
-        res.status(status.STATUS_OK).json(updatedRecord)
-    } catch (err) {
-        respondWithErr(err, res)
-    }
-})
-
-router.patch('/updateMany', async (req, res) => {
+router.patch('/', async (req, res) => {
     try {
         const updates = req.body
         throwErrorWhen(updates,status.STATUS_BAD_REQUEST,"Body must be an array of closet to update", x => !Array.isArray(x))
@@ -146,7 +113,7 @@ router.patch('/updateMany', async (req, res) => {
 
 /*====================== DELETE =======================*/
 
-router.delete('/deleteOne/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const id = req.params.id
         throwErrorWhen(id,status.STATUS_BAD_REQUEST,"Id must be a string", x => typeof(x) !== "string")

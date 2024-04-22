@@ -15,8 +15,8 @@ const sortby = {
         {display:'Description',value:'description'},
         {display:'Catégorie',value:'category'},
         {display:'Quantité',value:'quantity'},
-        {display:'Salle',value:'room'},
-        {display:'Armoire',value:'closet'}
+        {display:'Salle',value:'closet.room'},
+        {display:'Armoire',value:'closet.name'}
     ],
     prefixText: {show:true,text:'Trier par:'}
 }
@@ -38,10 +38,11 @@ const roomFilter = {
 const closetFilter = {
     items: [
         {display:'Tout',value:'none'},
-        {display:'INF-B01-ARM01',value:'INF-B01-ARM01'},
-        {display:'INF-B01-ARM02',value:'INF-B01-ARM02'},
-        {display:'INF-B01-ARM03',value:'INF-B01-ARM03'},
-        {display:'INF-B01-ARM04',value:'INF-B01-ARM04'}
+        {display:'INF-B01-ARM1',value:'INF-B01-ARM1'},
+        {display:'INF-B01-ARM2',value:'INF-B01-ARM2'},
+        {display:'INF-B01-ARM3',value:'INF-B01-ARM3'},
+        {display:'INF-B01-ARM4',value:'INF-B01-ARM4'},
+        {display:'INF-A01-ARM1',value:'INF-A01-ARM1'},
     ],
     prefixText: {show:true,text:'Armoire:'}
 }
@@ -57,7 +58,7 @@ onMounted(() => {
 <template>
     <div class="toolbar-content outline-shadow d-flex">
         <div class="sorting-elements d-flex">
-            <Textbox v-bind="txtbxSearch" @submit="x => search.options.research = x"></Textbox>
+            <Textbox v-bind="txtbxSearch" @vmodel="x => search.options.research = x"></Textbox>
             <Dropdown v-bind="sortby" @selected="x => search.options.sortBy = x"></Dropdown>
             <Dropdown v-bind="orderby" @selected="x => search.options.orderBy = x"></Dropdown>
             <Dropdown v-bind="roomFilter" @selected="x => search.options.roomFilter = x"></Dropdown>
@@ -70,7 +71,7 @@ onMounted(() => {
                 <button class="btn-blue d-flex" style="width: 2.1875rem;"><DownloadIco></DownloadIco></button>
                 <button class="btn-red d-flex" style="width: 2.1875rem;"><TrashIco></TrashIco></button>
             </div>
-            <p class="font-size-body font-bold">{{ search.options.results }} résultat(s)</p>
+            <p class="font-size-body font-bold">{{ search.results }} résultat(s)</p>
         </div>
     </div>
 </template>

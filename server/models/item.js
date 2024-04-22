@@ -20,4 +20,6 @@ const itemSchema = new mongoose.Schema({
     }
 });
 
+itemSchema.index({description: 'text'})
+
 module.exports = mongoose.model('Item', itemSchema);
