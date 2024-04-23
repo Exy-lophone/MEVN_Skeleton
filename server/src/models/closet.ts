@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 const types = mongoose.Schema.Types
 
-const userSchema = new mongoose.Schema({
-    username: {
+const closetSchema = new mongoose.Schema({
+    name: {
         type: types.String,
         unique: true,
         required: true
     },
-    password: {
+    room: {
         type: types.String,
         required: true
-    },
+    }
 });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('Closet', closetSchema);

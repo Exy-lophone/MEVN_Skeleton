@@ -1,5 +1,15 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
+import Closet from './closet'
+import { z } from 'zod'
+
 const types = mongoose.Schema.Types
+
+type ItemType = {
+    description: string,
+    quantity: number,
+    category: string,
+    closet: string
+}
 
 const itemSchema = new mongoose.Schema({
     description: {
@@ -16,10 +26,12 @@ const itemSchema = new mongoose.Schema({
     },
     closet: {
         type: types.ObjectId,
-        required: true
+        required: true,
+        ref: Closet
     }
 });
 
-itemSchema.index({description: 'text'})
-
-module.exports = mongoose.model('Item', itemSchema);
+export type {
+    ItemType
+}
+export default mongoose.model('Item', itemSchema);
