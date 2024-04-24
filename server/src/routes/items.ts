@@ -4,12 +4,15 @@ import express from "express"
 import Item from "../models/item"
 import status from "../utils/httpStatusCode"
 import errorUtils from "../utils/errorUtils"
+import promiseUtils from "../utils/promiseUtils"
 import { z } from "zod"
-const { resWithErr, throwWhen } = errorUtils
+import type { ErrorStatus } from "../utils/errorUtils"
 
 /*====================== UTILS =======================*/
 
 const router = express.Router()
+const { resWithErr, throwErrStatus, throwWhen } = errorUtils
+const { isFulfilled, isRejected } = promiseUtils
 
 const createSchema = z.object({
     description: z.string(),
@@ -26,9 +29,6 @@ const updateSchema = z.object({
     closet: z.string().optional()
 })
 
-const isFulfilled = <T>(p:PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === 'fulfilled';
-const isRejected = <T>(p:PromiseSettledResult<T>): p is PromiseRejectedResult => p.status === 'rejected';
-
 /*============================================ ROUTES =============================================*/
 
 /*====================== CREATE =======================*/
@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
         const passed = settledPromise.filter(isFulfilled).map(x => x.value)
         const failed = settledPromise.filter(isRejected)
         await Item.create(passed)
-        res.status(status.OK_CREATED).json({failed})
+        res.status(failed.length > 0 ? status.MULTI_STATUS : status.OK).json({failed})
     } catch (err) {
         resWithErr(err, res)
     }
@@ -75,10 +75,58 @@ router.get('/:id', async (req,res) => {
 
 router.patch('/', async (req, res) => {
     try {
-        const parsedBody = updateSchema.parse(req.body)
-        res.status(status.OK)
+        const parsedBody = updateSchema.array().parse(req.body)
+        const settledItems = await Promise.allSettled(parsedBody.map(async x => {
+            const itemRecord = await Item.findById({_id:x._id})
+            if(!itemRecord) {
+                const err: ErrorStatus = {
+                    status: status.BAD_REQUEST,
+                    message: `item with id ${x._id} don't exist`
+                }
+                throw err
+            }
+            return x
+        }))
+
+        const failed = settledItems.filter(isRejected)
+        const passed = settledItems.filter(isFulfilled)
+
+        const settledUpdates = await Promise.allSettled(passed.map(async x => {
+            const updates = x.value
+            await Item.updateOne({_id:updates._id},updates,{ runValidators: true })
+        }))
+
+        failed.push(...settledUpdates.filter(isRejected))
+        res.status(failed.length > 0 ? status.MULTI_STATUS : status.OK).json({failed})
     } catch (err) {
         resWithErr(err,res)
     }
 })
+
+/*====================== DELETE =======================*/
+
+router.delete('/', async (req, res) => {
+    try {
+        const ids = z.array(z.string()).parse(req.body)
+        const settledDelete = await Promise.allSettled(ids.map(async x => {
+            if(!await Item.exists({_id:x})) {
+                const err: ErrorStatus = {
+                    status: 400,
+                    message: `item with id ${x} don't exist`
+                }
+
+                throw err
+            }
+
+            await Item.deleteOne({_id:x})
+        }))
+
+        const failed = settledDelete.filter(isRejected)
+
+        res.status(failed.length > 0 ? status.MULTI_STATUS : status.OK).json({failed})
+    } catch (err) {
+        resWithErr(err, res)
+    }
+})
+
 export default router

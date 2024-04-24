@@ -9,15 +9,18 @@ type ErrorStatus = {
 
 type predicate<T> = (x: T) => boolean
 
-function throwWhen<T> (value: T, status: HttpStatusCode, msg: string, condition: predicate<T>) {
-    if(!condition(value)) return
-
+function throwErrStatus(message: string, status: HttpStatusCode) {
     const err: ErrorStatus = {
-        message: msg,
+        message: message,
         status
     }
 
     throw err
+}
+
+function throwWhen<T> (value: T, status: HttpStatusCode, msg: string, condition: predicate<T>) {
+    if(!condition(value)) return
+    throwErrStatus(msg,status)
 }
 
 function resWithErr(err: unknown, res: Response) {
@@ -43,5 +46,6 @@ export type {
 
 export default {
     throwWhen,
+    throwErrStatus,
     resWithErr
 }

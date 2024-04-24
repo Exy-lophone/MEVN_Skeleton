@@ -1,6 +1,7 @@
 @baseUrl = http://localhost:3000/items
 
 #===================== CREATE =====================#
+
 ###
 POST {{baseUrl}}
 Content-Type: application/json
@@ -10,13 +11,13 @@ Content-Type: application/json
         "description": "Item",
         "quantity": 6,
         "category": "Category",
-        "closet": "660143d8c4fdc78083e0f551"
+        "closet": "660143c1c4fdc78083e0f54f"
     },
     {
         "description": "ItemtTwo",
         "quantity": 25,
         "category": "CategoryTwo",
-        "closet": "660aaad8c4fdc78083e0f551"
+        "closet": "660143c1c4fdc78083e0f54f"
     }
 ]
 
@@ -25,6 +26,29 @@ Content-Type: application/json
 
 #===================== UPDATE =====================#
 
+###
+PATCH {{baseUrl}}
+Content-Type: application/json
 
+[
+    {
+        "_id": "66014ec1622e724ee1249e6c",
+        "quantity": 25,
+        "closet": "660143c1c4fdc78083e0f54b"
+    },
+    {
+        "_id": "660143c1c4fdc78083e0f54f",
+        "quantity": 25
+    }
+]
 
 #===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}
+Content-Type: application/json
+
+[
+    "6628f857a09978c9ce0f0d16",
+    "6628f857a09978c9ce0f0d17"
+]
