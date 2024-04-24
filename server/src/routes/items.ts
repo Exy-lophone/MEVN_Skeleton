@@ -51,9 +51,9 @@ router.post('/', async (req, res) => {
 
 /*======================= READ ========================*/
 
-router.get('/:limit', async (req,res) => {
+router.get('/limit/:limit', async (req,res) => {
     try {
-        const limit = z.number().parse(req.params.limit)
+        const limit = z.coerce.number().parse(req.params.limit)
         const items = await Item.where().populate('closet').limit(limit)
         res.status(status.OK).json(items)
     } catch (err) {
@@ -64,8 +64,16 @@ router.get('/:limit', async (req,res) => {
 router.get('/:id', async (req,res) => {
     try {
         const id = req.params.id
-        const items = await Item.findById(id).populate('closet')
-        res.status(status.OK).json(items)
+        const item = await Item.findById(id).populate('closet')
+        if(!item) {
+            const err: ErrorStatus = {
+                status: status.BAD_REQUEST,
+                message: `item with id ${id} don't exist`
+            }
+
+            throw err
+        }
+        res.status(status.OK).json(item)
     } catch (err) {
         resWithErr(err, res)
     }

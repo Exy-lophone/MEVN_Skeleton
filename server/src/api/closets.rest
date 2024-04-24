@@ -1,0 +1,39 @@
+@baseUrl = http://localhost:3000/closets
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+[
+
+]
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}/limit/50
+
+###
+GET {{baseUrl}}/66018c3dd4e7a69da37b293f
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}
+Content-Type: application/json
+
+[
+
+]
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}
+Content-Type: application/json
+
+[
+    
+]
