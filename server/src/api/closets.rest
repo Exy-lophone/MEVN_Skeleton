@@ -7,7 +7,14 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 [
-
+    {
+        "name": "INF-B01-ARM11",
+        "room": "B01"
+    },
+    {
+        "name": "INF-B01-ARM12",
+        "room": "B01"
+    }
 ]
 
 #===================== READ =====================#
@@ -25,15 +32,17 @@ PATCH {{baseUrl}}
 Content-Type: application/json
 
 [
-
+    {
+        "_id": "662909f970ebf77d373cf8b1",
+        "room": "A03dd"
+    },
+    {
+        "_id": "662909f970ebf77d373cf8b2",
+        "room": "A05"
+    }
 ]
 
 #===================== DELETE =====================#
 
 ###
-DELETE {{baseUrl}}
-Content-Type: application/json
-
-[
-    
-]
+DELETE {{baseUrl}}/662909f970ebf77d373cf8b2

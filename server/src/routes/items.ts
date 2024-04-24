@@ -11,7 +11,7 @@ import type { ErrorStatus } from "../utils/errorUtils"
 /*====================== UTILS =======================*/
 
 const router = express.Router()
-const { resWithErr, throwErrStatus, throwWhen } = errorUtils
+const { resWithErr } = errorUtils
 const { isFulfilled, isRejected } = promiseUtils
 
 const createSchema = z.object({

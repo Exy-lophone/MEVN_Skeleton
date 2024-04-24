@@ -9,10 +9,6 @@ const UNAUTHORIZED : HttpStatusCode = 401
 const NOTFOUND : HttpStatusCode = 404
 const INTERNALERR : HttpStatusCode = 500
 
-function multistatusCode<T, U> (passed: T[], failed: U[], ok: HttpStatusCode, bad: HttpStatusCode) {
-    return passed.length > 0 ? failed.length > 0 ? MULTI_STATUS : ok : bad
-}
-
 export type {
     HttpStatusCode
 }
@@ -25,7 +21,6 @@ export default {
     BAD_REQUEST,
     UNAUTHORIZED,
     NOTFOUND,
-    INTERNALERR,
-    multistatusCode
+    INTERNALERR
 }
 
