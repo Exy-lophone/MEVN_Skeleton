@@ -26,11 +26,13 @@ function resWithErr(err: unknown, res: Response) {
         return
     }
     if(err instanceof Error) {
+        console.error(err.message)
         res.status(500).json({error:err.message})
         return;
     }
     const errStatus = (err as ErrorStatus)
     if(!errStatus) return
+    console.error(errStatus.message)
     res.status(errStatus.status).json({error:errStatus.message})
 }
 

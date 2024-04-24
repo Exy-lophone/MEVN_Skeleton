@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:3000/items
+
+#===================== CREATE =====================#
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+[
+    {
+        "description": "Item",
+        "quantity": 6,
+        "category": "Category",
+        "closet": "660143d8c4fdc78083e0f551"
+    },
+    {
+        "description": "ItemtTwo",
+        "quantity": 25,
+        "category": "CategoryTwo",
+        "closet": "660aaad8c4fdc78083e0f551"
+    }
+]
+
+#===================== READ =====================#
+
+
+#===================== UPDATE =====================#
+
+
+
+#===================== DELETE =====================#

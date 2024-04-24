@@ -1,15 +1,11 @@
+/*===================== IMPORTS ======================*/
+
 import mongoose from 'mongoose'
 import Closet from './closet'
-import { z } from 'zod'
-
+import { ObjectId } from 'mongodb';
 const types = mongoose.Schema.Types
 
-type ItemType = {
-    description: string,
-    quantity: number,
-    category: string,
-    closet: string
-}
+/*===================== SCHEMA ======================*/
 
 const itemSchema = new mongoose.Schema({
     description: {
@@ -18,7 +14,7 @@ const itemSchema = new mongoose.Schema({
     },
     quantity: {
         type: types.Number,
-        required: true
+        required: true,
     },
     category: {
         type: types.String,
@@ -27,11 +23,20 @@ const itemSchema = new mongoose.Schema({
     closet: {
         type: types.ObjectId,
         required: true,
-        ref: Closet
+        ref: Closet,
+        validate: {
+            validator: async (id: ObjectId) => {
+                const closet = await Closet.find({_id:id})
+                return closet.length > 0
+            },
+            message: (props: any) => `${props.value} isn't a closet object id` 
+        }
     }
 });
 
-export type {
-    ItemType
-}
+/*=================== MIDDLEWARES ====================*/
+itemSchema.pre('save', async function(next) {
+    
+})
+
 export default mongoose.model('Item', itemSchema);
