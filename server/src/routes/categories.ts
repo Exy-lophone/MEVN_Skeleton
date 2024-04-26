@@ -6,9 +6,6 @@ import errorUtils from "../utils/errorUtils"
 import prisma from "../../prisma/prisma"
 import { z } from "zod"
 import type { ErrorStatus } from "../utils/errorUtils"
-
-/*====================== UTILS =======================*/
-
 const router = express.Router()
 const { resWithErr } = errorUtils
 
@@ -18,14 +15,11 @@ const { resWithErr } = errorUtils
 
 router.post('/', async (req, res) => {
     try {
-        const { name, fk_room } = req.body
-        const closet = await prisma.closet.create({
-            data: {
-                name,
-                fk_room
-            }
+        const { name } = req.body
+        const category = await prisma.category.create({
+            data: { name }
         })
-        res.status(status.OK).json(closet)
+        res.status(status.OK_CREATED).json(category)
     } catch (err) {
         resWithErr(err, res)
     }
@@ -35,8 +29,8 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req,res) => {
     try {
-        const closets = await prisma.closet.findMany()
-        res.status(status.OK).json(closets)
+        const categories = await prisma.category.findMany()
+        res.status(status.OK).json(categories)
     } catch (err) {
         resWithErr(err, res)
     }
@@ -45,17 +39,17 @@ router.get('/', async (req,res) => {
 router.get('/:id', async (req,res) => {
     try {
         const id = z.coerce.number().parse(req.params.id)
-        const closet = await prisma.closet.findUnique({
-            where: { id }
+        const category = await prisma.category.findUnique({
+            where: {id}
         })
-        if(!closet) {
+        if(!category){
             const err: ErrorStatus = {
                 status: status.BAD_REQUEST,
-                message: `Closet with id ${id} doesn't exist`
+                message: `Category with id ${id} doesn't exist !`
             }
             throw err
         }
-        res.status(status.OK).json(closet)
+        res.status(status.OK).json(category)
     } catch (err) {
         resWithErr(err, res)
     }
@@ -65,12 +59,12 @@ router.get('/:id', async (req,res) => {
 
 router.patch('/', async (req, res) => {
     try {
-        const { id, name, fk_room } = req.body
-        const closet = await prisma.closet.update({
-            where: { id },
-            data: { id, name, fk_room }
+        const { id, name } = req.body
+        const category = await prisma.category.update({
+            where: {id},
+            data: { id, name }
         })
-        res.status(status.OK).json(closet)
+        res.status(status.OK).json(category)
     } catch (err) {
         resWithErr(err,res)
     }
@@ -81,10 +75,10 @@ router.patch('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const id = z.coerce.number().parse(req.params.id)
-        const closet = await prisma.closet.delete({
+        const category = await prisma.category.delete({
             where: {id}
         })
-        res.status(status.OK).json(closet)
+        res.status(status.OK).json(category)
     } catch (err) {
         resWithErr(err, res)
     }

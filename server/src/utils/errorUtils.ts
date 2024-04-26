@@ -1,6 +1,5 @@
 import type { Response } from 'express'
 import type { HttpStatusCode } from './httpStatusCode'
-import httpStatusCode from './httpStatusCode'
 
 type ErrorStatus = {
     status: HttpStatusCode

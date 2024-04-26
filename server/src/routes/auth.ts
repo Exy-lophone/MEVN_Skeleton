@@ -1,34 +1,33 @@
-import dotenv from 'dotenv'
+import config from "../utils/config"
 import express from "express"
-import User from "../models/user"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import status from '../utils/httpStatusCode'
 import errorUtils from '../utils/errorUtils'
 import { z } from 'zod'
 import type { ErrorStatus } from '../utils/errorUtils'
+import prisma from "../../prisma/prisma"
+import verifyToken from "../middlewares/authVerify"
 
 const router = express.Router()
-dotenv.config()
-
 const { resWithErr } = errorUtils
-const secretKey = process.env.SECRET_KEY
-
-if(!secretKey) {
-    throw new Error("Secret key isn't defined !")
-}
-
-const createSchema = z.object({
+const parser = z.object({
     username: z.string(),
     password: z.string()
 })
+const wrongCredErr: ErrorStatus = {
+    status: status.UNAUTHORIZED,
+    message: `Wrong credentials`
+}
 
 router.post('/register', async (req,res) => {
     try {
-        const { username, password } = createSchema.parse(req.body)
+        const { username, password } = parser.parse(req.body)
         const hashedPswd = await bcrypt.hash(password,10)
-        const user = await User.create({username, password: hashedPswd})
-        const token = jwt.sign({userId: user._id},secretKey,{expiresIn: '1h'})
+        const user = await prisma.user.create({
+            data: { username, password: hashedPswd }
+        })
+        const token = jwt.sign({userId: user.id},config.SECRET_KEY,{expiresIn: '1h'})
         res.status(status.OK_CREATED).json({token})
     } catch (err) {
         resWithErr(err,res)
@@ -37,29 +36,20 @@ router.post('/register', async (req,res) => {
 
 router.post('/login', async (req,res) => {
     try {
-        const { username, password } = createSchema.parse(req.body)
-        const user = await User.findOne({username})
-        if(!user) {
-            const err: ErrorStatus = {
-                status: status.UNAUTHORIZED,
-                message: `Wrong credentials`
-            }
-            throw err
-        }
+        const { username, password } = parser.parse(req.body)
+        const user = await prisma.user.findUnique({
+            where: { username }
+        })
+        if(!user) throw wrongCredErr
         const match = await bcrypt.compare(password,user.password);
-        if(!match) {
-            const err: ErrorStatus = {
-                status: status.UNAUTHORIZED,
-                message: `Wrong credentials`
-            }
-            throw err
-        }
-        const token = jwt.sign({userId: user._id},secretKey,{expiresIn: '1h'})
+        if(!match) throw wrongCredErr
+        const token = jwt.sign({userId: user.id},config.SECRET_KEY,{expiresIn: '1h'})
         res.status(status.OK).json({token})
     } catch (err) {
         resWithErr(err,res)
     }
 })
 
+router.get('/verify',verifyToken,(req,res,next) => res.status(status.OK).json({authentication: true}))
 
 export default router

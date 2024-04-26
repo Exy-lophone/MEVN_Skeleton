@@ -1,0 +1,41 @@
+@baseUrl = http://localhost:3000/items
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "description": "Clavier",
+    "quantity": 10,
+    "fk_category": 2,
+    "fk_closet": 4
+}
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}
+
+###
+GET {{baseUrl}}/2
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}
+Content-Type: application/json
+
+{
+    "id": 2,
+    "description": "PC windows 10",
+    "quantity": 5,
+    "fk_category": 3,
+    "fk_closet": 7
+}
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}/1

@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3000/closets
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "name": "INF-B01-ARM4",
+    "fk_room": 4
+}
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}
+
+###
+GET {{baseUrl}}/1
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "INF-A01-ARM2",
+    "fk_room": 2
+}
+
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}/2

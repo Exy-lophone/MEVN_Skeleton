@@ -18,14 +18,13 @@ const { resWithErr } = errorUtils
 
 router.post('/', async (req, res) => {
     try {
-        const { name, fk_room } = req.body
-        const closet = await prisma.closet.create({
+        const { name } = req.body
+        const room = await prisma.room.create({
             data: {
-                name,
-                fk_room
+                name
             }
         })
-        res.status(status.OK).json(closet)
+        res.status(status.OK_CREATED).json(room)
     } catch (err) {
         resWithErr(err, res)
     }
@@ -35,8 +34,8 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req,res) => {
     try {
-        const closets = await prisma.closet.findMany()
-        res.status(status.OK).json(closets)
+        const rooms = await prisma.room.findMany()
+        res.status(status.OK).json(rooms)
     } catch (err) {
         resWithErr(err, res)
     }
@@ -45,17 +44,17 @@ router.get('/', async (req,res) => {
 router.get('/:id', async (req,res) => {
     try {
         const id = z.coerce.number().parse(req.params.id)
-        const closet = await prisma.closet.findUnique({
+        const room = await prisma.room.findUnique({
             where: { id }
         })
-        if(!closet) {
+        if(!room) {
             const err: ErrorStatus = {
                 status: status.BAD_REQUEST,
-                message: `Closet with id ${id} doesn't exist`
+                message: `Room with id ${id} doesn't exist`
             }
             throw err
         }
-        res.status(status.OK).json(closet)
+        res.status(status.OK).json(room)
     } catch (err) {
         resWithErr(err, res)
     }
@@ -65,12 +64,12 @@ router.get('/:id', async (req,res) => {
 
 router.patch('/', async (req, res) => {
     try {
-        const { id, name, fk_room } = req.body
-        const closet = await prisma.closet.update({
+        const { id, name } = req.body
+        const room = await prisma.room.update({
             where: { id },
-            data: { id, name, fk_room }
+            data: { id, name }
         })
-        res.status(status.OK).json(closet)
+        res.status(status.OK).json(room)
     } catch (err) {
         resWithErr(err,res)
     }
@@ -81,10 +80,10 @@ router.patch('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const id = z.coerce.number().parse(req.params.id)
-        const closet = await prisma.closet.delete({
+        const room = await prisma.room.delete({
             where: {id}
         })
-        res.status(status.OK).json(closet)
+        res.status(status.OK).json(room)
     } catch (err) {
         resWithErr(err, res)
     }

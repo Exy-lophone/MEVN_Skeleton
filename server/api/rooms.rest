@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:3000/rooms
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "name": "B01"
+}
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}
+
+###
+GET {{baseUrl}}/1
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "B01"
+}
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}/2
