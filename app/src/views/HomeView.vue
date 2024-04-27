@@ -1,13 +1,21 @@
+<script setup lang="ts">
+import toolbar from '@/components/toolbar.vue'
+import itemList from '@/components/itemList.vue'
+import { selection, options, clearSelection } from '@/composables/search'
+
+</script>
+
 <template>
-  <div class="home">
-    <div class="main-content">
-      <h1>Home page !</h1>
-    </div>
+  <div class="home-content d-flex" @click.self="clearSelection">
+    <toolbar></toolbar>
+    <item-list></item-list>
   </div>
 </template>
 
-<style>
-.home {
-  text-align: center;
-}
+<style scoped>
+  .home-content {
+    flex-direction: column;
+    padding: 4rem 0;
+    gap: 4rem;
+  }
 </style>
