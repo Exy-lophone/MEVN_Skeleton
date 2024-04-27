@@ -1,0 +1,148 @@
+:root {
+
+  /* NEUTRAL */
+  --neutral-0: #ffffff;
+  --neutral-20: #f5f5f5;
+  --neutral-50: #bfbfbf;
+  --neutral-80: #949494;
+  --neutral-500: #3b3b3b;
+  --neutral-900: #000000;
+
+  /* PRIMARY */
+  --primary-300: #0065ff;
+  --primary-50: #e6f0ff;
+
+  /* ERROR */
+  --error-300: #ff060d;
+
+  /* SUCCESS */
+  --success-400: #16a512;
+
+}
+
+:root {
+  --color-background: var(--neutral-0);
+  --color-background-light: var(--neutral-20);
+
+  --color-text: var(--neutral-900);
+  --color-text-light: var(--neutral-80);
+  --color-text-darklight: var(--neutral-500);
+
+  --color-border: var(--neutral-50);
+
+  --color-accent: var(--primary-300);
+  
+  --color-selected: var(--primary-50);
+
+  --color-error: var(--error-300);
+  --color-success: var(--success-400);
+}
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-size-xs {
+  font-size: 0.694rem;
+}
+
+.font-size-sm {
+  font-size: 0.833rem;
+}
+
+.font-size-body {
+  font-size: 1rem;
+}
+
+.font-size-h6 {
+  font-size: 1.2rem;
+}
+
+.font-size-h5 {
+  font-size: 1.44rem;
+}
+
+.font-size-h4 {
+  font-size: 1.728rem;
+}
+
+.font-size-h3 {
+  font-size: 2.074rem;
+}
+
+.font-size-h2 {
+  font-size: 2.488rem;
+}
+
+.font-size-h1 {
+  font-size: 2.986rem;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+a {
+  color: var(--color-text);
+}
+
+button {
+  border-radius: 0.5em;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5em 0;
+  color: var(--color-background);
+}
+
+.btn-blue {
+  background-color: var(--color-accent);
+}
+
+.btn-black {
+  background-color: var(--color-text);
+}
+
+.btn-red {
+  background-color: var(--color-error);
+}
+
+.btn {
+  width: 5em;
+}
+
+.btn-lg {
+  width: 6em;
+}
+
+.btn-xl {
+  width: 10em;
+}
+
+.btn-max {
+  width: 100%;
+}
+
+.outline-shadow {
+  box-shadow: 0 0 1.5625rem rgba(0,0,0,0.25);
+}
+
+.inner-shadow {
+  box-shadow: 0.125rem 0.25rem 0.25rem rgba(0,0,0,0.25) inset;
+}
+
+.outline-shadow-darker {
+  box-shadow: 0 0 0.625rem rgba(0,0,0,0.4);
+}

@@ -7,16 +7,22 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-    "description": "Clavier",
-    "quantity": 10,
-    "fk_category": 2,
+    "description": "Pixel 2",
+    "quantity": 3,
+    "fk_category": 6,
     "fk_closet": 4
 }
 
 #===================== READ =====================#
 
 ###
-GET {{baseUrl}}
+POST {{baseUrl}}/options
+Content-Type: application/json
+
+{
+    "sort": "closet",
+    "order": "desc"
+}
 
 ###
 GET {{baseUrl}}/2

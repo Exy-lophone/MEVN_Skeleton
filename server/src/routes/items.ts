@@ -6,6 +6,8 @@ import status from "../utils/httpStatusCode"
 import errorUtils from "../utils/errorUtils"
 import { z } from "zod"
 import type { ErrorStatus } from "../utils/errorUtils"
+import { Prisma } from "@prisma/client"
+import regex from "../utils/regex"
 
 /*====================== UTILS =======================*/
 
@@ -18,8 +20,21 @@ const { resWithErr } = errorUtils
 
 router.post('/', async (req, res) => {
     try {
-        const { description,quantity,fk_category,fk_closet } = req.body
+        const {description,quantity,fk_category,fk_closet} = req.body
         const item = await prisma.item.create({
+            select: {
+                id: true,
+                description: true,
+                quantity: true,
+                category: true,
+                closet: {
+                    select: {
+                        id: true,
+                        name: true,
+                        room: true,
+                    }
+                },
+            },
             data: {description,quantity,fk_category,fk_closet}
         })
         res.status(status.OK_CREATED).json(item)
@@ -29,6 +44,67 @@ router.post('/', async (req, res) => {
 })
 
 /*======================= READ ========================*/
+
+const OptionsFindInput = z.object({
+    research: z.string().optional(),
+    sort: z.union([
+        z.literal('description'),
+        z.literal('quantity'),
+        z.literal('category'),
+        z.literal('closet'),
+        z.literal('room')
+    ]),
+    order: z.union([z.literal('asc'),z.literal('desc')]),
+    room: z.string().regex(regex.room).optional(),
+    closet: z.string().regex(regex.closet).optional()
+})
+
+router.post('/options', async (req, res) => {
+    try {
+        const { research, sort, order, room, closet } = OptionsFindInput.parse(req.body)
+
+        const query: Prisma.ItemFindManyArgs = {
+            select: {
+                id: true,
+                description: true,
+                quantity: true,
+                category: true,
+                closet: {
+                    select: {
+                        id: true,
+                        name: true,
+                        room: true,
+                    }
+                },
+            },
+            where: {
+                description: {
+                    contains: research
+                },
+                closet: {
+                    name: closet,
+                    room: {
+                        name: room
+                    }
+                }
+            }
+        }
+
+        if(sort === 'closet' || sort === 'room' || sort === 'category') {
+            query['orderBy'] = { 
+                [sort]: { name: order }    
+            }
+        } else {
+            query['orderBy'] = { [sort]: order }
+        }
+
+        const items = await prisma.item.findMany(query)
+        
+        res.status(status.OK).json(items)
+    } catch (err) {
+        resWithErr(err, res)
+    }
+})
 
 router.get('/', async (req,res) => {
     try {

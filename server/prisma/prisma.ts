@@ -1,26 +1,23 @@
 import { PrismaClient } from '@prisma/client'
 import { z } from 'zod'
-
-const roomRegex = /^[A-C][0-9]{2}$/
-const closetRegex = /^INF-[A-C][0-9]{2}-ARM[0-9]{1,}$/
-
+import regex from '../src/utils/regex'
 const RoomCreateInput = z.object({
-    name: z.string().regex(roomRegex)
+    name: z.string().regex(regex.room)
 })
 
 const RoomUpdateInput = z.object({
     id: z.number(),
-    name: z.string().regex(roomRegex),
+    name: z.string().regex(regex.room),
 })
 
 const ClosetCreateInput = z.object({
-    name: z.string().regex(closetRegex),
+    name: z.string().regex(regex.closet),
     fk_room: z.number()
 })
 
 const ClosetUpdateInput = z.object({
     id: z.number(),
-    name: z.string().regex(closetRegex).optional(),
+    name: z.string().regex(regex.closet).optional(),
     fk_room: z.number().optional()
 })
 
