@@ -1,19 +1,13 @@
-<script setup>
-import Navbar from './components/Navbar.vue'
-import deltePopup from '@/components/delete-popup.vue'
-import modifyModal from '@/components/modify-modal.vue'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-
-const router = useRouter();
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import navbar from './components/navbar.vue'
+import deletePopup from './components/delete-popup.vue'
+import modifyModal from './components/modify-modal.vue'
 </script>
 
 <template>
-  <modify-modal></modify-modal>
-  <delte-popup></delte-popup>
-  <Navbar v-if="router.currentRoute.value.name !== 'login'"></Navbar>
-  <RouterView/>
+    <modify-modal></modify-modal>
+    <delete-popup></delete-popup>
+    <navbar></navbar>
+    <RouterView></RouterView>
 </template>
-
-<style scoped>
-</style>

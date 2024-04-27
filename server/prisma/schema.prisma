@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  description String
+  quantity    Int
+  category    Category @relation(fields: [fk_category], references: [id])
+  fk_category Int
+  closet      Closet   @relation(fields: [fk_closet], references: [id])
+  fk_closet   Int
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  items Item[]
+}
+
+model Closet {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  items   Item[]
+  room    Room   @relation(fields: [fk_room], references: [id])
+  fk_room Int
+}
+
+model Room {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  closets Closet[]
+}

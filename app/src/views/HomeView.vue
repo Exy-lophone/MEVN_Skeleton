@@ -1,21 +1,21 @@
-<script setup>
-import Toolbar from '@/components/Toolbar.vue'
-import ItemList from '@/components/ItemList.vue'
-import search from '@/search'
+<script setup lang="ts">
+import toolbar from '@/components/toolbar.vue'
+import itemList from '@/components/itemList.vue'
+import { selection, options, clearSelection } from '@/composables/search'
+
 </script>
 
 <template>
-  <div class="main-content d-flex" @click.self="search.clearSelection()">
-    <Toolbar></Toolbar>
-    <ItemList></ItemList>
+  <div class="home-content d-flex" @click.self="clearSelection">
+    <toolbar></toolbar>
+    <item-list></item-list>
   </div>
 </template>
 
 <style scoped>
-  .main-content {
+  .home-content {
     flex-direction: column;
-    gap: 4rem;
     padding: 4rem 0;
+    gap: 4rem;
   }
 </style>
-

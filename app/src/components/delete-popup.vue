@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import modal from '@/components/modal.vue'
-import trash from '@/components/icons/TrashIco.vue'
-import modalMode from '@/modals.js'
+import trash from '@/components/trashIcon.vue'
+import modalMode from '@/composables/modals.js'
 </script>
 
 <template>
@@ -29,4 +29,4 @@ import modalMode from '@/modals.js'
     .delete-modal-buttons {
         gap: 1rem
     }
-</style>@/modals.js
+</style>

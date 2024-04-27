@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:3000/categories
+
+#===================== CREATE =====================#
+
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "name": "smartphone"
+}
+
+#===================== READ =====================#
+
+###
+GET {{baseUrl}}
+
+###
+GET {{baseUrl}}/2
+
+#===================== UPDATE =====================#
+
+###
+PATCH {{baseUrl}}
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "PC"
+}
+
+#===================== DELETE =====================#
+
+###
+DELETE {{baseUrl}}/1
