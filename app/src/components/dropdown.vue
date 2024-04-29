@@ -1,16 +1,35 @@
 <script setup lang="ts">
-import type { TextboxProps, DropdownProps } from '@/propsTypes'
-import textbox from '@/components/textbox.vue'
-import { onMounted, ref } from 'vue'
+import textbox, { type TextboxProps } from '@/components/textbox.vue'
+import { onMounted, ref, type Ref } from 'vue'
+import { deepCopy } from '@/utils/CopyUtils'
+
+export type DropDownItem = {
+    display: string,
+    value?: string
+}
+
+export type DropdownProps = {
+    selected: DropDownItem,
+    selectable: DropDownItem[],
+    center?: boolean,
+    prefix?: TextboxProps['prefix'],
+    color?: string,
+}
+
+export type DropdownEmits = {
+    (e: 'selected', item?: string): void
+}
 
 const props = withDefaults(defineProps<DropdownProps>(), {
     prefix: () => ({show: false, text: ''}),
     center: false,
     color: 'var(--color-accent)'
 })
-const emit = defineEmits<{(e: 'selected', item?: string): void}>()
-const selectable = ref(props.items.filter((x,i) => i !== 0))
-const selected = ref(props.items[0])
+
+const emit = defineEmits<DropdownEmits>()
+const selectable: Ref<DropDownItem[]> = ref(deepCopy(props.selectable))
+const selected: Ref<DropDownItem> = ref(deepCopy(props.selected))
+
 const show = ref(false)
 const txtbx: TextboxProps = {
     center: props.center,
@@ -20,7 +39,7 @@ const txtbx: TextboxProps = {
     prefix: props.prefix
 }
 
-function itemSelected(item: DropdownProps['items'][number], index: number) {
+function itemSelected(item: DropDownItem, index: number) {
     selectable.value[index] = selected.value
     selected.value = item
     show.value = false
@@ -28,7 +47,7 @@ function itemSelected(item: DropdownProps['items'][number], index: number) {
 }
 
 onMounted(() => {
-    emit('selected', props.items[0].value)
+    emit('selected', selected.value.value)
 })
 </script>
 

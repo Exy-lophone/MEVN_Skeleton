@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import type { ArrowProps, TextboxProps } from '@/propsTypes'
-import arrow from '@/components/arrow.vue'
+import arrow, { type ArrowProps } from '@/components/arrow.vue'
 import { ref, watch } from 'vue'
 
-type Emits = {
+export type TextboxEmits = {
     (e: 'vmodel', input: string): void
     (e: 'left-arrow-clicked'): void
     (e: 'right-arrow-clicked'): void
     (e: 'submit', input: string): void
 }
 
-const emit = defineEmits<Emits>()
+export type TextboxProps = {
+    value?: string,
+    type?: string,
+    center?: boolean,
+    readonly?: boolean,
+    placeholder?: string,
+    color?: string,
+    leftArrow?: { show: boolean, direction: ArrowProps['direction'] },
+    rightArrow?: { show: boolean, direction: ArrowProps['direction'] },
+    prefix?: { show: boolean, text: string },
+    width?: number
+}
+
+const emit = defineEmits<TextboxEmits>()
 
 const props = withDefaults(defineProps<TextboxProps>(),{
     value: '',

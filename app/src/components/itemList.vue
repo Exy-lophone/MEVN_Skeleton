@@ -1,40 +1,25 @@
 <script setup lang="ts">
-import useFetchItems from '../composables/useFetchItems'
-import { 
+import {
+    loading,
+    error,
+    items, 
     selection, 
     initSelection, 
     isIndexSelected, 
     handleSelection, 
     stopSelection, 
     clearSelection, 
-    options, 
-    results,
-    selectedItems
-} from '../composables/search'
-import { onMounted, onUnmounted, watch } from 'vue'
+} from '../composables/useItems'
+import { onMounted, onUnmounted } from 'vue'
 
-const { items, loading, error, fetchItems } = useFetchItems()
 
 function keydownEventHandler(event: KeyboardEvent) {
     if(event.key !== 'Escape') return
     clearSelection()
 }
 
-watch(items, () => {
-    results.value = items.value.length
-})
-
-watch(selection, () => {
-    selectedItems.value = items.value
-    .filter((x,i) => i >= selection.start && i <= selection.end)
-})
-
-watch(options, () => {
-    fetchItems()
-})
-
 onMounted(() => {
-    fetchItems()
+
     window.addEventListener('mouseup', stopSelection)
     window.addEventListener('keydown', keydownEventHandler)
 })

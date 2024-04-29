@@ -1,39 +1,19 @@
 <script setup lang="ts">
 import modal from './modal.vue'
 import modalMode from '../composables/modals'
-import { selectedItems } from '../composables/search'
-import textbox from './textbox.vue'
-import dropdown from './dropdown.vue'
-import type { DropdownProps, TextboxProps } from '@/propsTypes'
+import { selectedItems, type Item } from '../composables/useItems'
+import textbox, { type TextboxProps } from './textbox.vue'
+import dropdown, { type DropdownProps } from './dropdown.vue'
+import { categories } from '@/composables/useCategories'
+import { closets } from '@/composables/useClosets'
+import { rooms } from '@/composables/useRooms'
 import { z } from 'zod'
 
-const categories: DropdownProps = {
-    items: [
-        {display:'Description',value:'description'},
-        {display:'Catégorie',value:'category'},
-        {display:'Quantité',value:'quantity'},
-        {display:'Salle',value:'room'},
-        {display:'Armoire',value:'closet'}
-    ],
-    color: 'var(--color-text-darklight)'
-}
+const dropDownColor = 'var(--color-text-darklight)';
 
-const rooms: DropdownProps = {
-    items: [
-        {display:'B01',value:'B01'},
-        {display:'A01',value:'A01'},
-    ],
-    color: 'var(--color-text-darklight)'
-}
-
-const closets: DropdownProps = {
-    items: [
-        {display:'INF-B01-ARM1',value:'INF-B01-ARM1'},
-        {display:'INF-B01-ARM2',value:'INF-B01-ARM2'},
-        {display:'INF-B01-ARM3',value:'INF-B01-ARM3'},
-        {display:'INF-B01-ARM4',value:'INF-B01-ARM4'}
-    ],
-    color: 'var(--color-text-darklight)'
+function inputNbr (input: string, item: Item) {
+    const result = z.coerce.number().safeParse(input)
+    if(result.success) item.quantity = result.data
 }
 </script>
 
@@ -52,14 +32,26 @@ const closets: DropdownProps = {
                     :center="true"
                     :left-arrow="{show:true,direction:'left'}"
                     :right-arrow="{show:true,direction:'right'}"
-                    @vmodel="x => item.quantity = z.coerce.number().parse(x)"
+                    @vmodel="x => inputNbr(x, item)"
                     @left-arrow-clicked="item.quantity--"
                     @right-arrow-clicked="item.quantity++"
                     :key="item.quantity"
                 ></textbox>
-                <dropdown v-bind="categories"></dropdown>
-                <dropdown v-bind="rooms"></dropdown>
-                <dropdown v-bind="closets"></dropdown>
+                <dropdown
+                    :selected="{display:item.category.name,value:item.category.name}"
+                    :selectable="categories.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.category.name)"
+                    :color="dropDownColor"
+                ></dropdown>
+                <dropdown
+                    :selected="{display:item.closet.name,value:item.closet.name}"
+                    :selectable="closets.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.closet.name)"
+                    :color="dropDownColor"
+                ></dropdown>
+                <dropdown
+                    :selected="{display:item.closet.room.name,value:item.closet.room.name}"
+                    :selectable="rooms.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.closet.room.name)"
+                    :color="dropDownColor"
+                ></dropdown>
             </div>
         </div>
         <div class="modify-modal-footer d-flex">

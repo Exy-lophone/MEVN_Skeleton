@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import type { ArrowProps } from '@/propsTypes'
-    
+export type ArrowProps = {
+    direction: "down" | "up" | "left" | "right"  
+}
+
 const props = defineProps<ArrowProps>()
 </script>
 

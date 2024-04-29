@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { TrashIconProps } from '@/propsTypes'
+export type TrashIconProps = {
+    width?: number,
+    height?: number,
+    color?: string
+}
 
 const props = withDefaults(defineProps<TrashIconProps>(),{
     width: 15,

@@ -2,6 +2,11 @@
 import modal from '@/components/modal.vue'
 import trash from '@/components/trashIcon.vue'
 import modalMode from '@/composables/modals.js'
+import { selectedItems } from '@/composables/useItems';
+
+
+function deleteItems () {
+}
 </script>
 
 <template>

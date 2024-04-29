@@ -7,10 +7,10 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-    "description": "Pixel 2",
-    "quantity": 3,
-    "fk_category": 6,
-    "fk_closet": 4
+    "description": "Ecran 27\"",
+    "quantity": 4,
+    "fk_category": 2,
+    "fk_closet": 1
 }
 
 #===================== READ =====================#
