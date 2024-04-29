@@ -48,11 +48,11 @@ export const error: Ref<unknown> = ref(null)
 export const selectedItems: Ref<Item[]> = ref([])
 
 export const options: Options = reactive({
-    research: '',
-    sort: '',
-    order: '',
-    room: '',
-    closet: ''
+    research: undefined,
+    sort: 'description',
+    order: 'asc',
+    room: undefined,
+    closet: undefined
 })
 
 export const selection: Selection = reactive({

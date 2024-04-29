@@ -19,7 +19,6 @@ function keydownEventHandler(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-
     window.addEventListener('mouseup', stopSelection)
     window.addEventListener('keydown', keydownEventHandler)
 })

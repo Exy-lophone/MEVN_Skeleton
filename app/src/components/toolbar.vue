@@ -5,8 +5,8 @@ import textbox, { type TextboxProps } from './textbox.vue'
 import dropdown, { type DropdownProps } from './dropdown.vue'
 import { selectedItems, options, selectAll, items } from '@/composables/useItems'
 import modalMode from '../composables/modals'
-import { rooms } from '@/composables/useRooms'
-import { closets } from '@/composables/useClosets'
+import { roomFetchObj } from '@/composables/useRooms'
+import { closetFetchObj } from '@/composables/useClosets'
 
 const search: TextboxProps = {
     placeholder: 'Rechercher...',
@@ -31,23 +31,6 @@ const order: DropdownProps = {
     ],
     prefix: {show:true,text:'Ordre:'}
 }
-
-const room: DropdownProps = {
-    selected: {display:'Tout'},
-    selectable: [
-        {display:'Tout'},
-        ...rooms.value.map(x => ({display:x.name,value:x.name}))
-    ],
-    prefix: {show:true,text:'Salle:'}
-}
-
-const closet: DropdownProps = {
-    selected: {display:'Tout'},
-    selectable: [
-        ...closets.value.map(x => ({display:x.name,value:x.name}))
-    ],
-    prefix: {show:true,text:'Armoire:'}
-}
 </script>
 
 <template>
@@ -56,8 +39,20 @@ const closet: DropdownProps = {
             <textbox v-bind="search" @vmodel="x => options.research = x"></textbox>
             <dropdown v-bind="sort" @selected="x => options.sort = x || 'description'"></dropdown>
             <dropdown v-bind="order" @selected="x => options.order = x || 'asc'"></dropdown>
-            <dropdown v-bind="room" @selected="x => options.room = x"></dropdown>
-            <dropdown v-bind="closet" @selected="x => options.closet = x"></dropdown>
+            <dropdown 
+                v-if="!roomFetchObj.loading.value" 
+                :selected="{display:'Tout'}"
+                :selectable="roomFetchObj.data.value.map(x => ({display:x.name,value:x.name}))"
+                :prefix="{show:true,text:'Salle:'}"
+                @selected="x => options.room = x"
+            ></dropdown>
+            <dropdown 
+                v-if="!closetFetchObj.loading.value" 
+                :selected="{display:'Tout'}"
+                :selectable="closetFetchObj.data.value.map(x => ({display:x.name,value:x.name}))"
+                :prefix="{show:true,text:'Armoire:'}"
+                @selected="x => options.closet = x"
+            ></dropdown>
         </div>
         <div class="sorting-interface d-flex">
             <button class="btn-blue btn-xl" @click="selectAll">tout sélectionner</button>

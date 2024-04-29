@@ -1,15 +1,14 @@
-import { ref, type Ref } from 'vue'
+import { createFetchObj, type FetchObj } from './useFetch'
 import { z } from 'zod'
-import {createFetchObj} from './useFetch'
 
 const BASE_URL = 'http://localhost:3000/categories'
 
-const CategoriesFetchParser = z.object({
+export const CategoriesFetchParser = z.array(z.object({
     id: z.number(),
     name: z.string()
-})
+}))
 
-export type Category = z.infer<typeof CategoriesFetchParser>
+export type Category = z.infer<typeof CategoriesFetchParser.element>
 
-export const catgoryFetchObj = createFetchObj<Category>(BASE_URL,{},CategoriesFetchParser)
+export const categoryFetchObj = createFetchObj<Category>({url: BASE_URL, req: {}, parser: CategoriesFetchParser})
 

@@ -2,10 +2,16 @@
 import modal from '@/components/modal.vue'
 import trash from '@/components/trashIcon.vue'
 import modalMode from '@/composables/modals.js'
-import { selectedItems } from '@/composables/useItems';
-
+import { selectedItems, clearSelection } from '@/composables/useItems';
+import { fetchItems } from '@/composables/useItems';
+import type { FetchRequest } from '@/composables/useFetch';
 
 function deleteItems () {
+    const results = Promise.allSettled(selectedItems.value.map(x => fetch('http://localhost:3000/items/'+x.id,{method:'DELETE'})))
+    console.log(results)
+    fetchItems()
+    clearSelection()
+    modalMode.delete=false
 }
 </script>
 
@@ -16,7 +22,7 @@ function deleteItems () {
             <p>Êtes-vous sûr(e) de vouloir<br>supprimer ces éléments</p>
             <div class="delete-modal-buttons d-flex">
                 <button class="btn-lg btn-black" @click="modalMode.delete = false">Annuler</button>
-                <button class="btn-lg btn-red" @click="modalMode.delete = false">Supprimer</button>
+                <button class="btn-lg btn-red" @click="deleteItems()">Supprimer</button>
             </div>
         </div>
     </modal>

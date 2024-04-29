@@ -4,9 +4,9 @@ import modalMode from '../composables/modals'
 import { selectedItems, type Item } from '../composables/useItems'
 import textbox, { type TextboxProps } from './textbox.vue'
 import dropdown, { type DropdownProps } from './dropdown.vue'
-import { categories } from '@/composables/useCategories'
-import { closets } from '@/composables/useClosets'
-import { rooms } from '@/composables/useRooms'
+import { categoryFetchObj } from '@/composables/useCategories'
+import { closetFetchObj } from '@/composables/useClosets'
+import { roomFetchObj } from '@/composables/useRooms'
 import { z } from 'zod'
 
 const dropDownColor = 'var(--color-text-darklight)';
@@ -39,17 +39,17 @@ function inputNbr (input: string, item: Item) {
                 ></textbox>
                 <dropdown
                     :selected="{display:item.category.name,value:item.category.name}"
-                    :selectable="categories.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.category.name)"
+                    :selectable="categoryFetchObj.data.value.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.category.name)"
                     :color="dropDownColor"
                 ></dropdown>
                 <dropdown
                     :selected="{display:item.closet.name,value:item.closet.name}"
-                    :selectable="closets.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.closet.name)"
+                    :selectable="closetFetchObj.data.value.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.closet.name)"
                     :color="dropDownColor"
                 ></dropdown>
                 <dropdown
                     :selected="{display:item.closet.room.name,value:item.closet.room.name}"
-                    :selectable="rooms.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.closet.room.name)"
+                    :selectable="roomFetchObj.data.value.map(x => ({display:x.name,value:x.name})).filter(x => x.display !== item.closet.room.name)"
                     :color="dropDownColor"
                 ></dropdown>
             </div>
